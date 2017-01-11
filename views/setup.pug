@@ -1,0 +1,26 @@
+extends layout
+block vars
+  - var title='Initial Setup'
+  - var site_name=site.name
+  - var description = 'Initial Mold Setup'
+
+block content
+  div(class="container")
+    h1 Setup Mold
+    form(method="post")
+      div(class="form-group")
+        label(for="name") Site Name
+        input(type="text" class="form-control" name="sitename" required="true")
+      div(class="form-group")
+        label(for="name") Name
+        input(type="text" class="form-control" name="name" required="true")
+      div(class="form-group")
+        label(for="username") Username
+        input(type="text" class="form-control" name="username" required="true")
+      div(class="form-group")
+        label(for="password") Password
+        input(type="password" class="form-control" name="password" required="true")
+      div(class="form-group")
+        label(for="email") Email
+        input(type="text" class="form-control" name="email" required="true")
+      button(type="submit" class="btn btn-default") Submit

@@ -1,0 +1,17 @@
+extends layout
+
+block vars
+  - var title = 'Dashboard'
+  - var description = 'Site dashboard'
+
+block content
+  div(class="row-fluid")
+    div(class="col-md-8 col-md-offset-2")
+      h1 Dashboard
+      h2 Hello
+      p=user.name
+      img(src=user.display_picture)
+  script.
+    $(function() {
+      $(".target-active").find('[href="/dash"]').parent().addClass("active");
+    });

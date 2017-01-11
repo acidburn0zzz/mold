@@ -1,0 +1,61 @@
+//-Dashboard layout
+doctype html
+block vars
+html
+  head
+    title #{title}
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible" content="IE=edge")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u", crossorigin="anonymous")
+    link(rel='stylesheet', href="/stylesheets/font-awesome.min.css")
+    link(rel='stylesheet', href='/stylesheets/navbar-left.css')
+    link(rel='stylesheet' href='/stylesheets/dash-style.css')
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.13/clipboard.min.js")
+    script(src="/script/jquery.confirm.min.js")
+  body
+    div(class="container-fluid")
+      div(class="row")
+        div(class="col-sm-3 col-lg-2")
+          nav(class="navbar navbar-default navbar-fixed-side")
+            div(class="container")
+              div(class="navbar-header")
+                a(class="navbar-brand" href="/dash")
+                  <i class="fa fa-home"></i>&nbsp; Dashboard
+                button(class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse")
+                  span(class="sr-only") Toggle Navigation
+                  span(class="icon-bar")
+                  span(class="icon-bar")
+                  span(class="icon-bar")
+              div(class="collapse navbar-collapse")
+                ul(class="nav navbar-nav target-active")
+                  li
+                    a(href="/dash/pages")
+                      <i class="fa fa-file-text-o fa-fw"></i>&nbsp; Pages
+                  li
+                    a(href="/dash/settings")
+                      <i class="fa fa-cog fa-fw"></i>&nbsp; Settings
+                  li
+                    a(href="/dash/posts")
+                      <i class="fa fa-book fa-fw"></i>&nbsp; Posts
+                  li
+                    a(href="/dash/compose")
+                      <i class="fa fa-pencil fa-fw"></i>&nbsp; Compose
+                  li
+                    a(href="/dash/media")
+                      <i class="fa fa-file-image-o fa-fw"></i>&nbsp; Media
+                  li
+                    a(href="/dash/profile")
+                      <i class="fa fa-user fa-fw"></i>&nbsp; Profile
+                  li
+                    a(href="/")
+                      <i class="fa fa-external-link fa-fw"></i>&nbsp; Front
+                ul(class="nav navbar-nav navbar-right")
+                  li
+                    a(href="/dash/logout")
+                      <i class="fa fa-sign-out fa-fw"></i>&nbsp; Logout
+        div(class="col-sm-9 col-lg-10 dash-col")
+          div(class="container-fluid")
+            block content

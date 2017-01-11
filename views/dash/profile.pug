@@ -1,0 +1,51 @@
+extends layout
+
+block vars
+  - var title = 'Profile'
+  - var description = 'User profile'
+
+block content
+  div(class="row-fluid")
+    div(class="col-md-8 col-md-offset-2")
+      if change
+        div(class="alert alert-success alert-dismissible" role="alert")
+          button(type="button" class="close" data-dismiss="alert" aria-label="Close"): span(aria-hidden="true") &times;
+          p Profile Updated
+      div(class="panel panel-default")
+        div(class="panel-heading")
+          h4 Profile
+        div(class="panel-body")
+          form(method="post" action="/dash/profile" enctype="multipart/form-data")
+            div(class="form-group")
+              img(src=user.display_picture)
+              label(for="display_picture") Display Picture
+                input(type="file" name="display_picture" id="display_picture")
+            div(class="form-group")
+              label(for="username") User Name
+              input(type="text" class="form-control" name="username" value=user.username)
+            div(class="form-group")
+              label(for="name") Name
+              input(type="text" class="form-control" name="name" value=user.name)
+            div(class="form-group")
+              label(for="email") Email
+              input(type="text" class="form-control" name="email" value=user.email)
+            hr
+            h4 Change Password
+            div(class="form-group")
+              input(type="password" class="form-control" name="current_password" placeholder="Current Password")
+            div(class="form-group")
+              input(type="password" class="form-control" name="new_password" placeholder="New Password")
+            div(class="form-group")
+              input(type="password" class="form-control" name="new_password_repeated" placeholder="Repeat New Password")
+            div(class="form-group")
+              button(type="submit" class="btn btn-default") Update Profile
+            a(class="btn btn-default" href="/auth/google")
+              i(class="fa fa-google")
+            if user.google_token
+              p Google account linked
+            else
+              p Google account not linked
+      script.
+        $(function() {
+          $(".target-active").find('[href="/dash/profile"]').parent().addClass("active");
+        });

@@ -1,0 +1,36 @@
+extends layout.pug
+
+block vars
+  - var title='Edit ' + page.title
+  - var description='Compose a new post'
+
+block content
+  div(class="row-fluid")
+    div(class="col-md-8 col-md-offset-2")
+      form(method="post")
+        div(class="form-group")
+          label(for="title") Title
+          input(type="text" class="form-control" name="title" value=page.title)
+        div(class="panel panel-default")
+          div(class="panel-heading") Body
+          div(class="panel-body" style="min-height: 500px" id="content")
+          textarea(name="content")=page.content
+        script(src="/script/ace/ace.js") 
+        script.
+          var textarea = $('textarea[name="content"]').hide();
+          var editor = ace.edit('content')
+          editor.setOptions({fontFamily:"monospace", fontSize:"10pt"});
+          editor.setTheme("ace/theme/monokai");
+          editor.$blockScrolling = Infinity;
+          editor.getSession().setMode("ace/mode/markdown");
+          editor.getSession().setValue(textarea.val());
+          editor.getSession().on("change", function() {
+            textarea.val(editor.getSession().getValue());
+          });
+        div(class="form-group")
+          button(name = "submit" type="submit" class="btn btn-primary")
+            <i class="fa fa-save"></i>&nbsp; Update
+  script.
+    $(function() {
+      $(".target-active").find('[href="/dash/pages"]').parent().addClass("active");
+    });

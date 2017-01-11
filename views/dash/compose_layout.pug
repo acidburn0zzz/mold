@@ -1,0 +1,33 @@
+doctype html
+block vars
+html
+  head
+    title #{title}
+    //-meta(name='description' content='#{description}')
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous")
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u", crossorigin="anonymous")
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href="/stylesheets/font-awesome.min.css")
+    link(rel='stylesheet', href='/stylesheets/navbar-left.css')
+  body
+    div(class="container-fluid")
+      div(class="row")
+        div(class="col-sm-3 col-lg-2")
+          nav(class="navbar navbar-default navbar-fixed-side")
+            div(class="collapse navbar-collapse")
+              ul(class="nav navbar-nav")
+                li
+                  a(href="/dash") Dashboard
+                li
+                  a(href="/dash/posts") Posts
+                li
+                  a(href="/dash/media") Media
+                li
+                  a(href="/dash") Comments
+                li
+                  a(href="/") Front
+                li
+                  a(href="/dash/profile") Profile
+        div(class="col-sm-9 col-lg-10")
+          block content

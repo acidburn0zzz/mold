@@ -1,0 +1,14 @@
+extends layout
+
+block vars
+  - var title = site.name + ": " + error.status
+  - var site_name=site.name
+
+block content
+  div(class="container")
+    div(class="row")
+      div(class="col-md-10 col-md-offset-1")
+        h1=error.status
+        h3=error.message
+        div(class="form-group")
+          a(class="btn btn-default" href=error.back) Back

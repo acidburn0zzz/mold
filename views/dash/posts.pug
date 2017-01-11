@@ -1,0 +1,58 @@
+extends layout
+
+block vars
+  - var title='Posts'
+  - var description='Created posts'
+
+block content
+  div(class="row-fluid")
+    div(class="col-md-8 col-md-offset-2")
+      div(class="row form-group")
+        h1 Posts
+      div(class="row form-group")
+        div(class="table-responsive")
+          table(class="table")
+            tr
+              th Title
+                th Date Created
+                th Date Updated
+                th Draft
+                th Author
+                th View
+                th Edit
+                th Delete
+                th Views
+            each post in posts
+              - var post_url = '/p/' + post.slug
+              - var post_delete = '/dash/posts/delete/' + post.id
+              - var post_edit_url = '/dash/posts/edit/' + post.id
+              tr
+                td=post.title
+                td=post.pretty_date
+                td=post.updatedAt
+                if post.draft
+                  td
+                    i(class="fa fa-check-square-o" aria-hidden="true")
+                else
+                  td
+                    i(class="fa fa-square-o" aria-hidden="true")
+                td=user.name
+                td
+                  a(class="btn btn-default" href=post_url)
+                    <i class="fa fa-eye"></i>&nbsp; View
+                td
+                  a(class="btn btn-primary" href=post_edit_url)
+                    <i class="fa fa-pencil-square-o"></i>&nbsp; Edit
+                td
+                  a(class="confirm btn btn-danger" href=post_delete)
+                    <i class="fa fa-trash-o"></i>&nbsp; Delete
+                td
+                  span(class="label label-info")=post.views
+  script.
+    $(function() {
+      $(".target-active").find('[href="/dash/posts"]').parent().addClass("active");
+    });
+    $('.confirm').confirm({
+      title: 'Are you sure?',
+      text: 'Are you sure you would like to delete this post? This cannot be undone',
+    });

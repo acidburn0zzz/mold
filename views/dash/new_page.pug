@@ -1,0 +1,30 @@
+extends layout.pug
+
+block vars
+  - var title='Create a New Page'
+  - var description='Compose a new post'
+
+block content
+  div(class="row-fluid")
+    div(class="col-md-8 col-md-offset-2")
+      form(method="post")
+        div(class="form-group")
+          label Title
+          input(type="text" class="form-control" name="title" placeholder="Title" required="true")
+        div(class="panel panel-default")
+          div(class="panel-heading") Body
+          div(class="panel-body" style="min-height: 800px" id="content")
+          textarea(name="content" required="true")
+        script(src="/script/ace/ace.js") 
+        script.
+          var textarea = $('textarea[name="content"]').hide();
+          var editor = ace.edit('content')
+          editor.setOptions({fontFamily:"monospace", fontSize:"12pt"});
+          editor.setTheme("ace/theme/monokai");
+          editor.$blockScrolling = Infinity;
+          editor.getSession().setMode("ace/mode/markdown");
+          editor.getSession().setValue(textarea.val());
+          editor.getSession().on("change", function() {
+            textarea.val(editor.getSession().getValue());
+          });
+        button(type="submit" class="btn btn-default") Save

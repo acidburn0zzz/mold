@@ -1,0 +1,22 @@
+extends layout
+
+block vars
+  - var title=site.name + ': Login'
+  - var site_name=site.name
+
+block content
+  div(class='container')
+    div(class="row")
+      div(class="col-md-8 col-md-offset-2")
+        div(class="panel panel-default")
+          div(class="panel-body")
+            h3(style="text-align: center;") Login
+            hr
+            a(class="btn btn-default" href="/auth/google/") Google
+            hr
+            form(method="post")
+              div(class="form-group")
+                input(type="text" class="form-control" name="username" placeholder="Username")
+              div(class="form-group")
+                input(type="password" class="form-control" name="password" placeholder="Password")
+              button(type="submit" class="btn btn-primary") Login
