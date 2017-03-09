@@ -1,7 +1,9 @@
 {
   "name": "mold",
-  "version": "0.0.1",
-  "private": true,
+  "version": "1.0.0",
+  "main": "./bin/www",
+  "repository": "git@github.com:0X1A/mold.git",
+  "license": "MIT",
   "scripts": {
     "start": "node ./bin/www"
   },
