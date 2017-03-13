@@ -1,5 +1,4 @@
-let Site = require('../models/orm').Site;
-let User = require('../models/orm').User;
+import {Site, User} from '../../models';
 
 // Middleware for checking if site is inialized
 function initialized(req, res, next) {

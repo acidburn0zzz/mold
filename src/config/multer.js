@@ -2,11 +2,7 @@ let multer = require('multer');
 let storage = multer.diskStorage({
   destination: './public/uploads/',
   filename: function(req, file, next) {
-    if (req.body.bame) {
-      return next(null, req.body.name);
-    } else {
-      return next(null, Date.now() + file.originalname);
-    }
+    return next(null, Date.now() + "_" + file.originalname);
   }
 });
 let display_picture_storage = multer.diskStorage({

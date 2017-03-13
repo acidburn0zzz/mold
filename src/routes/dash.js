@@ -1,9 +1,10 @@
 let router = require('express').Router();
-let Post = require('../models/orm').Post;
-let User = require('../models/orm').User;
-let Media = require('../models/orm').Media;
-let Site = require('../models/orm').Site;
-let Page = require('../models/orm').Page;
+import {User, Site, Post, Image} from '../../models';
+//let Post = require('../models/orm').Post;
+//let User = require('../models/orm').User;
+//let Media = require('../models/orm').Media;
+//let Site = require('../models/orm').Site;
+//let Page = require('../models/orm').Page;
 let passport = require('passport');
 let slug = require('slug');
 let moment = require('moment');
@@ -14,6 +15,7 @@ let image_upload = require('../config/multer').image_upload;
 let display_picture_upload = require('../config/multer').display_picture_upload;
 let Promise = require('bluebird');
 let fs = require('fs');
+import path from 'path';
 Promise.promisifyAll(imageMagick);
 Promise.promisifyAll(fs);
 
@@ -30,7 +32,7 @@ router.get('/',  function(req, res, next) {
 });
 
 router.get('/media',  function(req, res, next) {
-  Media.findAll({
+  Image.findAll({
     order: [
       ['createdAt', 'DESC']
     ]
@@ -46,7 +48,7 @@ router.get('/media/upload',  function(req, res, next) {
 });
 
 router.get('/media/edit/:media_id', function(req, res, next) {
-  Media.findOne({
+  Image.findOne({
     where: {
       id: req.params.media_id,
     },
@@ -65,14 +67,14 @@ router.get('/media/edit/:media_id', function(req, res, next) {
 });
 
 router.post('/media/edit/:media_id', image_upload.single('image'), function(req, res, next) {
-  Media.findOne({
+  Image.findOne({
     where: {
       id: req.params.media_id,
     },
     rejectOnEmpty: true,
   }).then(function(media) {
     if (req.file) {
-      fs.unlinkAsync(media.destination + media.filename).then(function() {
+      fs.unlinkAsync(media.file_name).then(function() {
         media.update({
           name: req.body.name,
           path: '/'+req.file.path,
@@ -95,12 +97,10 @@ router.post('/media/edit/:media_id', image_upload.single('image'), function(req,
 });
 
 router.post('/media/upload', image_upload.single('image'), function(req, res, next) {
-  Media.create({
-    name: req.body.name,
-    description: req.body.description,
-    path: '/'+req.file.path,
-    filename: req.file.filename,
-    destination: req.file.destination,
+  Image.create({
+    path: '/' + req.file.path,
+    file_name: req.file.filename,
+    file_path: path.resolve(req.file.destination + req.file.filename),
   }).then(function() {
     res.redirect('/dash/media');
     return null;
@@ -112,13 +112,13 @@ router.post('/media/upload', image_upload.single('image'), function(req, res, ne
 });
 
 router.get('/media/delete/:media_id', function(req, res, next) {
-  Media.findOne({
+  Image.findOne({
     where: {
       id: req.params.media_id,
     },
     rejectOnEmpty: true,
   }).then(function(media) {
-    fs.unlinkAsync(media.destination + media.filename).then(function() {
+    fs.unlinkAsync(media.file_path).then(function() {
       media.destroy();
       res.redirect('/dash/media');
     }).catch(function (err) {
@@ -188,9 +188,6 @@ router.get('/logout',  function(req, res, next) {
 
 router.get('/posts',  function(req, res, next) {
   Post.findAll({
-    order: [
-      ['date', 'DESC']
-    ],
   }).then(function(posts) {
     User.findOne().then(function(user) {
       res.render('dash/posts', {

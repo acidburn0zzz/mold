@@ -3,18 +3,10 @@
 var app = require('../app');
 var debug = require('debug')('node:server');
 var http = require('http');
-var https = require('https');
 var fs = require('fs');
 let TLS = require('../config/config').TLS;
 
 var httpPort = normalizePort(process.env.HTTP_PORT || '3000');
-var httpsPort = normalizePort(process.env.HTTPS_PORT || '8080');
-
-let httpsOptions = {
-  key: fs.readFileSync(TLS.key),
-  cert: fs.readFileSync(TLS.cert)
-};
-var httpsServer = https.createServer(httpsOptions, app).listen(httpsPort);
 
 var server = http.createServer(app);
 server.listen(httpPort);
