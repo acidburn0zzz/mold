@@ -1,16 +1,60 @@
 let gulp = require('gulp');
-let Site = require('./models/orm').Site;
-let ORM = require('./models/orm').ORM;
 let exec = require('child_process').execSync;
 
+gulp.task('reroll', function() {
+  exec('sequelize db:migrate:undo:all', (err, stdout, stderr) => {
+    if (err) {
+      console.error(`exec error: ${err}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.log(`stderr: ${stderr}`);
+  });
+});
+
+gulp.task('reset', function() {
+  exec('sequelize db:migrate:undo:all', (err, stdout, stderr) => {
+    if (err) {
+      console.error(`exec error: ${err}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.log(`stderr: ${stderr}`);
+  });
+  exec('sequelize db:migrate', (err, stdout, stderr) => {
+    if (err) {
+      console.error(`exec error: ${err}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.log(`stderr: ${stderr}`);
+  });
+  exec('sequelize db:seed:all', (err, stdout, stderr) => {
+    if (err) {
+      console.error(`exec error: ${err}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.log(`stderr: ${stderr}`);
+  });
+});
+
 gulp.task('initial-setup', function() {
-  ORM.sync({force: true}).then(function() {
-    Site.create({
-      name: 'Mold',
-      favicon: null,
-      initialized: false,
-      open_registration: false,
-    });
+  exec('sequelize db:migrate', (err, stdout, stderr) => {
+    if (err) {
+      console.error(`exec error: ${err}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.log(`stderr: ${stderr}`);
+  });
+  exec('sequelize db:seed --seed seeders/20170310225649-initial-setup.js', (err, stdout, stderr) => {
+    if (err) {
+      console.error(`exec error: ${err}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.log(`stderr: ${stderr}`);
   });
 });
 
