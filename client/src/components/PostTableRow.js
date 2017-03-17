@@ -1,5 +1,6 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {Route, Link} from 'react-router-dom';
+import PostCompose from './PostCompose';
 
 export default class PostTableRow extends React.Component {
   render() {
@@ -14,7 +15,7 @@ export default class PostTableRow extends React.Component {
           </Link>
         </td>
         <td>
-          <Link to="">
+          <Link to={`/dash/post/${this.props.post.path}`}>
             <button type="button" className="btn btn-outline-primary">Edit</button>
           </Link>
         </td>

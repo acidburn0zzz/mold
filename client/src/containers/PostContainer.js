@@ -24,7 +24,8 @@ export default class PostContainer extends Component {
     return(
       <div className="col-md-9 offset-md-3">
         <div style={{ paddingTop: 65 }}>
-          <Post post={this.state.post} user={this.state.user} />
+          {/*{this.props.children, {user: this.state.post, post: this.state.post}}*/}
+          <Post {...this.state} />
         </div>
       </div>
     );

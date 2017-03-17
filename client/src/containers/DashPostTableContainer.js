@@ -12,13 +12,13 @@ export default class DashPostTableContainer extends Component {
 
   componentDidMount() {
     axios.get('http://localhost:3001/api/post/').then((res) => {
-        const posts = res.data;
-        this.setState({ posts: posts });
-      });
+      const posts = res.data;
+      this.setState({ posts: posts });
+    });
   }
 
   render() {
-    let style = { paddingTop: 55 };
+    let style = { paddingTop: 65 };
     return(
       <div>
         <div style={style}>
@@ -34,11 +34,11 @@ export default class DashPostTableContainer extends Component {
             </thead>
             <tbody>
               {this.state.posts.map(post => 
-                <PostTableRow key={post.id} style={style} post={post} user={post.User} />
+                <PostTableRow key={post.id} post={post} user={post.User} />
               )}
             </tbody>
           </table>
-    </div>
+        </div>
       </div>
     );
   }

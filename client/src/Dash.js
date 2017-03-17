@@ -2,6 +2,11 @@ import React, {Component} from 'react';
 import DashSideNav from './components/DashSideNav';
 import DashPostsView from './components/DashPostsView';
 import NavbarContainer from './containers/NavbarContainer';
+import {
+  Route,
+} from 'react-router-dom';
+import PostCompose from './components/PostCompose';
+import DashOpView from './components/DashOpView';
 
 class Dash extends Component {
   render() {
@@ -11,9 +16,9 @@ class Dash extends Component {
         <div className="container-fluid">
           <div className="row">
             <DashSideNav />
-            <div className="col-sm-9 offset-sm-3 col-md-9 offset-med-3">
-              <DashPostsView />
-            </div>
+            <DashOpView />
+              {/*<Route exact={true} path="/dash" component={DashPostsView}/>*/}
+              {/*<Route path="/dash/post/edit" component={({match}) => (<PostCompose params={match.params}/>)} />*/}
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
 
 export default class DashSideNav extends Component {
   render() {
@@ -27,22 +28,22 @@ export default class DashSideNav extends Component {
 
     return(
       <div>
-          <nav className="col-sm-3 col-md-2 hidden-xs-down bg-fadded" style={sideBarStyle}>
-            <ul className="nav nav-pills flex-column">
-              <li style={sideBarNavItemStyle} className="nav-item">
-                <a style={sideBarNavLinkStyle} className="nav-link active">Dashboard</a>
-              </li>
-              <li style={sideBarNavItemStyle} className="nav-item">
-                <a className="nav-link">Posts</a>
-              </li>
-              <li style={sideBarNavItemStyle} className="nav-item">
-                <a className="nav-link">Profile</a>
-              </li>
-              <li style={sideBarNavItemStyle} className="nav-item">
-                <a className="nav-link">Pages</a>
-              </li>
-            </ul>
-          </nav>
+        <nav className="col-sm-3 col-md-2 hidden-xs-down bg-fadded" style={sideBarStyle}>
+          <ul className="nav nav-pills flex-column">
+            <li style={sideBarNavItemStyle} className="nav-item">
+              <Link to="/dash" style={sideBarNavLinkStyle} className="nav-link active">Dashboard</Link>
+            </li>
+            <li style={sideBarNavItemStyle} className="nav-item">
+              <Link to="/dash/posts" className="nav-link">Posts</Link>
+            </li>
+            <li style={sideBarNavItemStyle} className="nav-item">
+              <a className="nav-link">Profile</a>
+            </li>
+            <li style={sideBarNavItemStyle} className="nav-item">
+              <a className="nav-link">Pages</a>
+            </li>
+          </ul>
+        </nav>
       </div>
     );
   }

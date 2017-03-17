@@ -8,6 +8,7 @@ import Dash from './Dash';
 import {
   Route,
 } from 'react-router-dom';
+import PostCompose from './components/PostCompose';
 
 export default class Main extends Component {
   render() {

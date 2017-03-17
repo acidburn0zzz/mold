@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React from 'react';
 import DashPostTableContainer from '../containers/DashPostTableContainer'
 
-export default class DashPostsView extends Component {
+export default class DashPostsView extends React.Component {
   render() {
     return(
       <div>
