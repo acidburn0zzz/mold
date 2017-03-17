@@ -6,6 +6,7 @@ module.exports = function(sequelize, DataTypes) {
     rendered: DataTypes.TEXT,
     excerpt: DataTypes.TEXT,
     draft: DataTypes.BOOLEAN,
+    path: DataTypes.STRING,
     url: DataTypes.STRING,
   }, {
     classMethods: {

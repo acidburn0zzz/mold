@@ -1,5 +1,6 @@
 'use strict';
 const bcrypt = require('bcrypt');
+
 module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define('User', {
     name: DataTypes.STRING,
@@ -19,6 +20,7 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false
           }
         });
+        User.hasMany(models.Post);
       }
     },
     instanceMethods: {
@@ -27,5 +29,8 @@ module.exports = function(sequelize, DataTypes) {
       },
     },
   });
+  User.postDefaultExcludeAttributes = [
+    'id', 'username', 'password', 'google_id', 'google_token', 'createdAt', 'updatedAt', 'SiteId'
+  ];
   return User;
 };

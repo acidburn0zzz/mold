@@ -6,9 +6,12 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        // associations can be defined here
+        Site.hasMany(models.Page);
       }
     }
   });
+  Site.postDefaultExcludeAttributes = [
+    'id', 'initialized', 'createdAt', 'updatedAt'
+  ];
   return Site;
 };

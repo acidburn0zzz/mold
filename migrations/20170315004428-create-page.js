@@ -1,25 +1,21 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('Posts', {
+    return queryInterface.createTable('Pages', {
       id: {
+        allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.literal('uuid_generate_v4()')
+        type: Sequelize.INTEGER
       },
       title: {
-        allowNull: false,
-        unique: true,
         type: Sequelize.STRING
       },
       content: {
-        type: Sequelize.TEXT
+        type: Sequelize.STRING
       },
       rendered: {
-        type: Sequelize.TEXT
-      },
-      excerpt: {
-        type: Sequelize.TEXT
+        type: Sequelize.STRING
       },
       draft: {
         type: Sequelize.BOOLEAN
@@ -45,18 +41,10 @@ module.exports = {
           model: 'Sites',
           key: 'id'
         }
-      },
-      UserId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Users',
-          key: 'id'
-        }
-      },
+      }
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('Posts');
+    return queryInterface.dropTable('Pages');
   }
 };
