@@ -1,17 +1,15 @@
 #!/usr/bin/env node
-
-var app = require('../app');
+import {app} from '../app';
 var debug = require('debug')('node:server');
 var http = require('http');
 var fs = require('fs');
-let TLS = require('../config/config').TLS;
 
-var httpPort = normalizePort(process.env.HTTP_PORT || '3000');
+let appServerPort = normalizePort(process.env.HTTP_PORT || '3001');
+let appHttpServer = http.createServer(app);
 
-var server = http.createServer(app);
-server.listen(httpPort);
-server.on('error', onError);
-server.on('listening', onListening);
+appHttpServer.listen(appServerPort);
+appHttpServer.on('error', onError);
+appHttpServer.on('listening', onListening);
 
 function normalizePort(val) {
   var port = parseInt(val, 10);
@@ -54,7 +52,7 @@ function onError(error) {
 }
 
 function onListening() {
-  var addr = server.address();
+  var addr = appHttpServer.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;

@@ -12,27 +12,16 @@ import cors from 'cors';
 //import dash from './routes/dash';
 import {User, Site, Post, sequelize} from '../models';
 
-let app = express();
 let sessionStore = require('connect-session-sequelize')(session.Store);
 let store = new sessionStore({ db: sequelize });
 store.sync();
 
+let app = express();
+app.use(cors());
 app.use(logger('common'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-//app.use(favicon(__dirname + '/public/favicon.ico'));
-
-app.use('/static', express.static(path.join(__dirname, 'static')));
-app.use(cors());
-
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/public', express.static('public'));
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
 app.use(session({
   secret: 'crazy cool cat',
   store: store,
@@ -40,13 +29,18 @@ app.use(session({
   resave: false,
   proxy: true
 }));
-
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api', api);
-//app.use('/login', login);
-//app.use('/dash', dash);
+
+app.use('/static', express.static(path.join(__dirname, 'static')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+//app.use(express.static(path.join(__dirname, 'public')));
+//app.use('/public', express.static('public'));
 
 passport.serializeUser((user, next) => {
   next(null, user);
@@ -63,8 +57,8 @@ passport.deserializeUser(function(user, next) {
 });
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+//app.set('views', path.join(__dirname, 'views'));
+//app.set('view engine', 'pug');
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -112,4 +106,4 @@ if (app.get('env') == 'production') {
   app.use(compression());
 }
 
-module.exports = app;
+export {app};
