@@ -10,11 +10,11 @@ import passport from '../config/passport';
 
 let redisClient = redis.createClient(6379, 'localhost');
 let router = Router();
-let cachedPage = cache(sequelize, redisClient).model('Page').ttl(1);
-let cachedSite = cache(sequelize, redisClient).model('Site').ttl(1);
-let cachedUser = cache(sequelize, redisClient).model('User').ttl(1);
-let cachedPost = cache(sequelize, redisClient).model('Post').ttl(1);
-let cachedImage = cache(sequelize, redisClient).model('Image').ttl(1);
+let cachedPage = cache(sequelize, redisClient).model('Page').ttl(10);
+let cachedSite = cache(sequelize, redisClient).model('Site').ttl(10);
+let cachedUser = cache(sequelize, redisClient).model('User').ttl(10);
+let cachedPost = cache(sequelize, redisClient).model('Post').ttl(10);
+let cachedImage = cache(sequelize, redisClient).model('Image').ttl(10);
 
 function authenticated(req, res, next) {
   //if (req.isAuthenticated()) {
@@ -24,8 +24,7 @@ function authenticated(req, res, next) {
   //}
 };
 
-router.post('/auth',
-  passport.authenticate('local'), (req, res) =>
+router.post('/auth', passport.authenticate('local'), (req, res) =>
   {
     res.sendStatus(200);
   });
@@ -40,9 +39,6 @@ router.get('/post', (req, res, next) => {
     order: [
       ['createdAt', 'DESC']
     ],
-    attributes: {
-      exclude: ['content']
-    },
     include: [{
       model: User,
       attributes: {
@@ -66,9 +62,6 @@ router.get('/post/:path', (req, res, next) => {
     where: {
       path: req.params.path,
       draft: false
-    },
-    attributes: {
-      exclude: ['content']
     },
     include: [{
       model: User,
