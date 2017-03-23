@@ -11,7 +11,7 @@ export default class PostListContainer extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3001/api/post/').then((res) => {
+    axios.get('http://localhost:3001/api/v1/post/published').then((res) => {
         const posts = res.data;
         this.setState({ posts: posts });
       });

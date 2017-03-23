@@ -1,18 +1,13 @@
 import React, {Component} from 'react';
 import DashSideNav from './components/DashSideNav';
-import DashPostsView from './components/DashPostsView';
-import NavbarContainer from './containers/NavbarContainer';
-import {
-  Route,
-} from 'react-router-dom';
-import PostCompose from './components/PostCompose';
 import DashOpView from './components/DashOpView';
+import DashNavbar from './components/DashNavbar';
 
 class Dash extends Component {
   render() {
     return(
       <div>
-        <NavbarContainer />
+        <DashNavbar />
         <div className="container-fluid">
           <div className="row">
             <DashSideNav />

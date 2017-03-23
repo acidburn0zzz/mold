@@ -9,27 +9,30 @@ class LoginForm extends Component {
       username: '',
       password: '',
     }
-    this.handleAuth = this.handleAuth.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.handleUsernameChange = this.handleUsernameChange.bind(this);
   }
 
-  handleUsernameChange(e) {
-    this.setState({ username: e.target.value });
+  handleInputChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+    console.log(`NAME : VALUE ::: ${event.target.name}: ${event.target.value}`);
   }
 
-  handlePasswordChange(e) {
-    this.setState({ password: e.target.value });
+  printValue = () => {
+    console.log(this.state.username);
+    console.log(this.state.password);
   }
 
-  handleAuth() {
-    axios.post('http://localhost:3001/api/auth', {
+  handleAuth = () => {
+    axios.post('http://localhost:3001/api/v1/auth', {
       username: this.state.username,
       password: this.state.password
     }).then((res) => {
       if (res.status === 200) {
-        console.log("You logged in ok but still got fucking redirected");
+        window.location.href = "/dash";
       }
+    }).catch((err) => {
+
     });
   }
 
@@ -41,14 +44,14 @@ class LoginForm extends Component {
           <form>
             <div className="form-group">
               <label htmlFor="username">Username</label>
-              <input type="text" name="username" className="form-control" value={this.state.username} placeholder="Username" onChange={this.handleUsernameChange}/>
+              <input type="text" name="username" className="form-control" value={this.state.username} placeholder="Username" onChange={this.handleInputChange}/>
             </div>
             <div className="form-group">
               <label htmlFor="password">Password</label>
-              <input type="password" name="password" className="form-control" value={this.state.password} placeholder="Password" onChange={this.handlePasswordChange} />
+              <input type="password" name="password" className="form-control" value={this.state.password} placeholder="Password" onChange={this.handleInputChange} />
             </div>
-            <button onClick={this.handleAuth} className="btn btn-primary">Submit</button>
           </form>
+          <button onClick={() => this.handleAuth()} className="btn btn-primary">Save</button>
         </div>
       </div>
     );

@@ -12,8 +12,11 @@ export default class NavbarContainer extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3001/api/site').then((res) => {
-      this.setState({ site: res.data, pages: res.data.Pages })
+    axios.get('http://localhost:3001/api/v1/site').then((res) => {
+      this.setState({ site: res.data })
+    });
+    axios.get('http://localhost:3001/api/v1/page').then((res) => {
+      this.setState({ pages: res.data });
     });
   }
 

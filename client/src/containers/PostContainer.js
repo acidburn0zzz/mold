@@ -12,7 +12,7 @@ export default class PostContainer extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3001/api/post/' + this.props.params.post_url).then((res) => {
+    axios.get('http://localhost:3001/api/v1/post/published/' + this.props.params.post_url).then((res) => {
         const post = res.data;
         const user = res.data.User;
         document.title = post.title;
@@ -22,7 +22,7 @@ export default class PostContainer extends Component {
 
   render() {
     return(
-      <div className="col-md-9 offset-md-3">
+      <div className="col-md-6 offset-md-3">
         <div style={{ paddingTop: 65 }}>
           {/*{this.props.children, {user: this.state.post, post: this.state.post}}*/}
           <Post {...this.state} />

@@ -10,7 +10,7 @@ class FrontPage extends Component {
         <NavbarContainer/>
         <div className="container-fluid">
           <div className="row">
-            <div className="col-md-9 offset-md-3">
+            <div className="col-md-6 offset-md-3">
               <PostListContainer />
             </div>
           </div>

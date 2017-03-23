@@ -22,25 +22,18 @@ export default class DashSideNav extends Component {
       marginLeft: 0
     };
 
-    let sideBarNavLinkStyle = {
-      borderRadius: 0
-    };
-
     return(
       <div>
         <nav className="col-sm-3 col-md-2 hidden-xs-down bg-fadded" style={sideBarStyle}>
           <ul className="nav nav-pills flex-column">
             <li style={sideBarNavItemStyle} className="nav-item">
-              <Link to="/dash" style={sideBarNavLinkStyle} className="nav-link active">Dashboard</Link>
-            </li>
-            <li style={sideBarNavItemStyle} className="nav-item">
               <Link to="/dash/posts" className="nav-link">Posts</Link>
             </li>
             <li style={sideBarNavItemStyle} className="nav-item">
-              <a className="nav-link">Profile</a>
+              <Link to="/dash/profile" className="nav-link">Profile</Link>
             </li>
             <li style={sideBarNavItemStyle} className="nav-item">
-              <a className="nav-link">Pages</a>
+              <Link to="/dash/pages" className="nav-link">Pages</Link>
             </li>
           </ul>
         </nav>

@@ -10,7 +10,7 @@ export default class PageContainer extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3001/api/page/' + this.props.params.page_url).then((res) => {
+    axios.get('http://localhost:3001/api/v1/page/published/' + this.props.params.page_url).then((res) => {
         const page = res.data;
         this.setState({ page: page });
       });
