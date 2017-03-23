@@ -400,4 +400,8 @@ router.post('/page', authenticated, (req, res, next) => {
   });
 });
 
+router.get('*', (req, res) => {
+  res.sendStatus(404);
+});
+
 export default router;
