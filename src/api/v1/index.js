@@ -6,6 +6,7 @@ import slug from 'slug';
 import cache from 'sequelize-redis-cache';
 import redis from 'redis';
 import path from 'path'
+import jwt from 'jsonwebtoken';
 import {image_upload} from '../../config/multer';
 import passport from '../../config/passport';
 import Promise from 'bluebird';
@@ -19,13 +20,7 @@ const locations = {
   image: '/api/v1/image/',
 };
 
-function authenticated(req, res, next) {
-  //if (req.isAuthenticated()) {
-    return next();
-  //} else {
-    //res.sendStatus(403);
-  //}
-};
+const authenticated = passport.authenticate('jwt', { session: false });
 
 router.get('/auth/google', passport.authenticate('google', { scope: ['email'] }));
 
@@ -33,8 +28,31 @@ router.get('/auth/google/callback', passport.authenticate('google'), (req, res) 
   res.sendStatus(200);
 });
 
-router.post('/auth', passport.authenticate('local'), (req, res) => {
-  res.sendStatus(200);
+router.post('/auth', (req, res) => {
+  User.findOne({
+    where: {
+      username: req.body.username
+    },
+    rejectOnEmpty: true
+  }).then((user) => {
+    if (user.validPassword(req.body.password)) {
+      const payload = { id: user.id };
+      const token = jwt.sign(payload, "testkey");
+      res.status(200).send({ token: token });
+    } else {
+      res.sendStatus(401);
+    }
+  }).catch(() => {
+    res.sendStatus(403);
+  });
+});
+
+router.post('/auth/:token', (req, res) => {
+  if (jwt.verify(req.params.token, "testkey")) {
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(401);
+  }
 });
 
 // Begin blog post API
@@ -295,7 +313,6 @@ router.post('/image', authenticated, image_upload.single('image'), (req, res, ne
 });
 
 router.delete('/image/:id', authenticated, (req, res, next) => {
-  console.log(req.params.id);
   Image.findOne({
     where: {
       id: req.params.id

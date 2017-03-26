@@ -6,12 +6,13 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon --exec babel-node -- src/bin/www.js",
-    "build": "babel src --out-dir  build"
+    "build": "babel src --out-dir  build",
+    "test": "mocha --compilers js:babel-core/register src/test"
   },
   "dependencies": {
     "bcrypt": "^0.8.7",
     "bcrypt-nodejs": "0.0.3",
-    "bluebird": "^3.4.7",
+    "bluebird": "^3.5.0",
     "body-parser": "~1.15.1",
     "compression": "^1.6.2",
     "connect-session-sequelize": "^4.1.0",
@@ -23,6 +24,7 @@
     "highlight.js": "^9.8.0",
     "imagemagick": "^0.1.3",
     "intl": "^1.2.5",
+    "jsonwebtoken": "^7.3.0",
     "markdown-it": "^8.2.1",
     "markdown-it-attrs": "^0.8.0",
     "markdown-it-container": "^2.0.0",
@@ -32,6 +34,7 @@
     "multer": "^1.2.0",
     "passport": "^0.3.2",
     "passport-google-oauth": "^1.0.0",
+    "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0",
     "pg": "^6.1.4",
     "pg-hstore": "^2.3.2",
@@ -48,6 +51,8 @@
     "babel-cli": "^6.23.0",
     "babel-preset-latest": "^6.22.0",
     "babel-preset-stage-0": "^6.22.0",
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
     "gulp": "^3.9.1",
     "mocha": "^3.2.0"
   }

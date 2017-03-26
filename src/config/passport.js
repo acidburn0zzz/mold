@@ -3,6 +3,7 @@ let Passport = require('passport');
 let GoogleStrat = require('passport-google-oauth').OAuth2Strategy;
 let LocalStrat = require('passport-local').Strategy;
 import {User, Site} from '../../models';
+import {Strategy as JWTStrat, ExtractJwt} from 'passport-jwt';
 
 Passport.use(new GoogleStrat({
   clientID: GoogleClient.client_id,
@@ -48,6 +49,22 @@ Passport.use(new LocalStrat((username, password, next) => {
     } else {
       return next(null, false);
     }
+  }).catch(() => {
+    return next(null, false);
+  });
+}));
+
+Passport.use(new JWTStrat({
+  jwtFromRequest: ExtractJwt.fromAuthHeader(),
+  secretOrKey: "testkey"
+}, (jwt_payload, next) => {
+  User.findOne({
+    where: {
+      id: jwt_payload.id
+    },
+    rejectOnEmpty: true
+  }).then((user) => {
+    return next(null, user);
   }).catch(() => {
     return next(null, false);
   });
