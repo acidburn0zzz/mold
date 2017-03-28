@@ -6,7 +6,7 @@ export default class Post extends Component {
     return(
       <div>
         <h1>{this.props.post.title}</h1>
-        <p>{`By: ${this.props.user.name}`}</p>
+        <p>By: {this.props.user.name}</p>
         <div dangerouslySetInnerHTML={renderedContent} />
       </div>
     );

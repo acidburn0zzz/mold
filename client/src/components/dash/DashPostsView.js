@@ -1,9 +1,9 @@
 import React from 'react';
 import PostCardListContainer from '../../containers/dash/PostCardListContainer';
-import DashPostTableContainer from '../../containers/DashPostTableContainer'
 
 export default class DashPostsView extends React.Component {
   render() {
+    document.title = "Dashboard | Posts";
     return(
       <div>
         <PostCardListContainer />

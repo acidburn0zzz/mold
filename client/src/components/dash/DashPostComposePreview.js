@@ -39,11 +39,9 @@ export default class DashPostComposePreview extends React.Component {
   }
 
   handleInputChange = (event) => {
-    if (event.target.name === "draft") {
-      this.setState({ draft: event.target.checked });
-    } else {
+    event.target.type === "checkbox" ?
+      this.setState({ [event.target.name]: event.target.checked }) :
       this.setState({ [event.target.name]: event.target.value });
-    }
   }
 
   handleContentChange = (content) => {

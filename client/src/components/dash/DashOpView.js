@@ -5,13 +5,6 @@ import DashPostComposePreview from './DashPostComposePreview';
 import DashProfileContainer from '../../containers/DashProfileContainer';
 
 export default class DashOpView extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      view: {}
-    }
-  }
-
   render() {
     return(
       <div className="col-sm-6 offset-sm-3 col-md-6 offset-med-3">

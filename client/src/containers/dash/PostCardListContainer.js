@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from '../../axios';
-import {Link} from 'react-router-dom';
 import PostCard from '../../components/dash/PostCard';
 
 export default class PostCardListContainer extends React.Component {
@@ -17,12 +16,20 @@ export default class PostCardListContainer extends React.Component {
     });
   }
 
+  deletePost = (post) => {
+    axios.delete('/post/' + post.path).then((res) => {
+      let posts = this.state.posts.slice();
+      posts.splice(posts.indexOf(post), 1);
+      this.setState({ posts: posts });
+    });
+  }
+
   render() {
     let style = { paddingTop: 65 };
     return(
       <div style={style}>
         {this.state.posts.map(post => 
-          <PostCard key={post.id} post={post} />
+          <PostCard key={post.id} post={post} deletePost={this.deletePost} />
         )}
       </div>
     );
