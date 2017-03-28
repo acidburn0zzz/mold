@@ -4,7 +4,7 @@ import NavbarContainer from './containers/NavbarContainer';
 import PostContainer from './containers/PostContainer';
 import PageContainer from './containers/PageContainer';
 import FrontPage from './FrontPage';
-import Dash from './Dash';
+import Dash from './components/dash/Dash';
 import {
   Route,
 } from 'react-router-dom';

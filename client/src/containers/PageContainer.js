@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import axios from 'axios';
+import axios from '../axios';
 
 export default class PageContainer extends Component {
   constructor(props) {
@@ -10,7 +10,7 @@ export default class PageContainer extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3001/api/v1/page/published/' + this.props.params.page_url).then((res) => {
+    axios.get('/page/published/' + this.props.params.page_url).then((res) => {
         const page = res.data;
         this.setState({ page: page });
       });

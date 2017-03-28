@@ -20,7 +20,14 @@ const locations = {
   image: '/api/v1/image/',
 };
 
-const authenticated = passport.authenticate('jwt', { session: false });
+function excerpter(string) {
+  let summary = new String(string);
+  summary = summary.substr(0, summary.lastIndexOf(" ", 250));
+  return markdown.render(summary.valueOf())
+}
+
+const authenticated = (req, res, next) => { return next() };
+//const authenticated = passport.authenticate('jwt', { session: false });
 
 router.get('/auth/google', passport.authenticate('google', { scope: ['email'] }));
 
@@ -160,13 +167,13 @@ router.get('/post/:path', authenticated, (req, res, next) => {
 });
 
 router.post('/post', authenticated, (req, res, next) => {
-  cachedSite.findOne().then((cachedSiteRes) => {
-    cachedUser.findOne().then((cachedUserRes) => {
+  Site.findOne().then((cachedSiteRes) => {
+    User.findOne().then((cachedUserRes) => {
       Post.create({
         title: req.body.title,
         content: req.body.content,
         rendered: markdown.render(req.body.content),
-        excerpt: markdown.render(req.body.content),
+        excerpt: excerpter(req.body.content),
         draft: req.body.draft ? true : false,
         path: slug(req.body.title, { lower: true }),
         url: '/p/' + slug(req.body.title, { lower: true }),
@@ -197,7 +204,7 @@ router.put('/post/:path', authenticated, (req, res, next) => {
       title: req.body.title,
       content: req.body.content,
       rendered: markdown.render(req.body.content),
-      excerpt: markdown.render(req.body.content),
+      excerpt: excerpter(req.body.content),
       draft: req.body.draft ? true : false,
       path: slug(req.body.title, { lower: true }),
       url: '/p/' + slug(req.body.title, { lower: true }),

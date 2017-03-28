@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {Redirect} from 'react-router-dom';
-import axios from 'axios';
+import axios from './axios';
 
 class LoginForm extends Component {
   constructor() {
@@ -15,20 +14,15 @@ class LoginForm extends Component {
     this.setState({
       [event.target.name]: event.target.value
     });
-    console.log(`NAME : VALUE ::: ${event.target.name}: ${event.target.value}`);
-  }
-
-  printValue = () => {
-    console.log(this.state.username);
-    console.log(this.state.password);
   }
 
   handleAuth = () => {
-    axios.post('http://localhost:3001/api/v1/auth', {
+    axios.post('/auth', {
       username: this.state.username,
       password: this.state.password
     }).then((res) => {
       if (res.status === 200) {
+        localStorage.setItem('token', res.data.token);
         window.location.href = "/dash";
       }
     }).catch((err) => {

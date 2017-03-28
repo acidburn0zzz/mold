@@ -2,6 +2,10 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 
 export default class DashSideNav extends Component {
+  onLogout = () => {
+    localStorage.clear('token');
+  }
+
   render() {
     let sideBarStyle = {
       position: 'fixed',
@@ -34,6 +38,12 @@ export default class DashSideNav extends Component {
             </li>
             <li style={sideBarNavItemStyle} className="nav-item">
               <Link to="/dash/pages" className="nav-link">Pages</Link>
+            </li>
+            <li style={sideBarNavItemStyle} className="nav-item">
+              <Link to="/dash/images" className="nav-link">Images</Link>
+            </li>
+            <li style={sideBarNavItemStyle} className="nav-item">
+              <Link to="#" className="nav-link" onClick={this.onLogout}>Logout</Link>
             </li>
           </ul>
         </nav>

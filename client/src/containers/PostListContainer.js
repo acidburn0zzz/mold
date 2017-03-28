@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import axios from 'axios';
+import axios from '../axios';
 import PostBrief from '../components/PostBrief';
 
 export default class PostListContainer extends Component {
@@ -11,10 +11,9 @@ export default class PostListContainer extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3001/api/v1/post/published').then((res) => {
-        const posts = res.data;
-        this.setState({ posts: posts });
-      });
+    axios.get('/post/published').then((res) => {
+      this.setState({ posts: res.data });
+    });
   }
 
   render() {

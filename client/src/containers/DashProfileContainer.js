@@ -1,6 +1,6 @@
 import React from 'react';
-import axios from 'axios';
-import Profile from '../components/Profile';
+import axios from '../axios';
+import Profile from '../components/dash/Profile';
 
 export default class DashProfileContainer extends React.Component {
   constructor() {
@@ -11,9 +11,8 @@ export default class DashProfileContainer extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3001/api/v1/user').then((res) => {
-      const user = res.data;
-      this.setState({ user: user });
+    axios.get('/user').then((res) => {
+      this.setState({ user: res.data });
     });
   }
 

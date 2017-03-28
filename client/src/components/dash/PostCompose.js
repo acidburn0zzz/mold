@@ -4,6 +4,16 @@ import 'brace/theme/github';
 import 'brace/mode/markdown';
 
 export default class PostCompose extends React.Component {
+  postChangeSuccessful = () => {
+    if (this.props.postChangeSuccessful) {
+      return (
+        <div>
+          Post saved
+        </div>
+      );
+    }
+  }
+
   render() {
     return(
       <div style={{ paddingTop: 65 }}>
@@ -44,7 +54,7 @@ export default class PostCompose extends React.Component {
           </div>
         </form>
         <button className="btn btn-primary" onClick={this.props.submitPostChanges}>Submit</button>
-        <button className="btn btn-primary">Preview</button>
+        {this.postChangeSuccessful}
       </div>
     );
   }

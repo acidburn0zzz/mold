@@ -1,9 +1,8 @@
 import React from 'react';
 import {Route} from 'react-router-dom';
 import DashPostsView from './DashPostsView';
-import PostCompose from './PostCompose';
 import DashPostComposePreview from './DashPostComposePreview';
-import DashProfileContainer from '../containers/DashProfileContainer';
+import DashProfileContainer from '../../containers/DashProfileContainer';
 
 export default class DashOpView extends React.Component {
   constructor() {

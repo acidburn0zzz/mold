@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import axios from 'axios';
+import axios from '../axios';
 import Navbar from '../components/Navbar';
 
 export default class NavbarContainer extends Component {
@@ -12,10 +12,10 @@ export default class NavbarContainer extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3001/api/v1/site').then((res) => {
+    axios.get('/site').then((res) => {
       this.setState({ site: res.data })
     });
-    axios.get('http://localhost:3001/api/v1/page').then((res) => {
+    axios.get('/page/published').then((res) => {
       this.setState({ pages: res.data });
     });
   }
