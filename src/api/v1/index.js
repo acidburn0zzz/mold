@@ -43,8 +43,7 @@ router.post('/auth', (req, res) => {
     rejectOnEmpty: true
   }).then((user) => {
     if (user.validPassword(req.body.password)) {
-      const payload = { id: user.id };
-      const token = jwt.sign(payload, "testkey");
+      const token = jwt.sign({ id: user.id }, "testkey", req.body.remember_me ? null : { expiresIn: '1d' });
       res.status(200).send({ token: token });
     } else {
       res.sendStatus(401);
@@ -224,9 +223,9 @@ router.delete('/post/:path', authenticated, (req, res, next) => {
       path: req.params.path,
     }
   }).then((result) => {
-    res.send(200);
+    res.sendStatus(200);
   }).catch((error) => {
-    res.send(404);
+    res.sendStatus(404);
   });
 });
 
