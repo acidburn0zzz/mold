@@ -1,6 +1,8 @@
 import React from 'react';
+import moment from 'moment';
 import axios from '../../axios';
 import PostCompose from './PostCompose';
+import DashPostSideNav from './DashPostSideNav';
 
 export default class DashPostComposePreview extends React.Component {
   constructor(props) {
@@ -10,6 +12,8 @@ export default class DashPostComposePreview extends React.Component {
       content: "",
       draft: false,
       path: "",
+      createdAtDate: {},
+      createdAtTime: {},
       postChangeSuccessful: {},
     };
   }
@@ -21,9 +25,14 @@ export default class DashPostComposePreview extends React.Component {
         title: res.data.title,
         content: res.data.content,
         draft: res.data.draft,
-        path: res.data.path
+        path: res.data.path,
+        createdAtDate: moment(res.data.createdAt).format("YYYY-MM-DD"),
+        createdAtTime: moment(res.data.createdAt).format("HH:mm")
       });
     });
+  }
+
+  submitFeaturedImage = () => {
   }
 
   submitPostChanges = () => {
@@ -31,10 +40,11 @@ export default class DashPostComposePreview extends React.Component {
       title: this.state.title,
       content: this.state.content,
       draft: this.state.draft,
+      createdAt: moment(`${this.state.createdAtDate} ${this.state.createdAtTime}`, "YYYY-MM-DD HH:mm")
     }).then((res) => {
-      if (res.status === 200) {
-        this.setState({ postChangeSuccessful: true });
-      }
+      this.setState({ postChangeSuccessful: true });
+    }).catch(() => {
+
     });
   }
 
@@ -59,6 +69,11 @@ export default class DashPostComposePreview extends React.Component {
           handleInputChange={this.handleInputChange}
           handleContentChange={this.handleContentChange}
           submitPostChanges={this.submitPostChanges} />
+        <DashPostSideNav
+          createdAtDate={this.state.createdAtDate}
+          createdAtTime={this.state.createdAtTime}
+          handleInputChange={this.handleInputChange}
+        />
       </div>
     );
   }
