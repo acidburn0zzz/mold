@@ -7,8 +7,8 @@ export default class PostCard extends React.Component {
   renderStatusBadge = () => { 
     return(
       this.props.post.draft ?
-      <span className="badge badge-info">Draft</span> :
-      <span className="badge badge-default">Published</span>
+      <span className="badge badge-info" data-toggle="tooltip" title="This post has not yet been published">Draft</span> :
+      <span className="badge badge-default" data-toggle="tooltip" title="This post is published and publicly viewable">Published</span>
     );
   }
 
@@ -44,16 +44,29 @@ export default class PostCard extends React.Component {
         <PostCardModal post={this.props.post} deletePost={this.props.deletePost} />
         <div className="card mb-3">
           <div className="card-block">
-            <h4 className="card-title">{this.props.post.title} &nbsp;</h4>
+            <h2 className="card-title">{this.props.post.title} &nbsp;</h2>
+            <hr/>
             <div className="card-text" dangerouslySetInnerHTML={renderedExcerpt} />
             {this.renderTimeUpdated(moment(this.props.post.createdAt), moment(this.props.post.updatedAt))}
-            <Link to={`/dash/posts/${this.props.post.path}`}>
-              <button type="button" className="btn btn-outline-primary">
-                <i className="fa fa-pencil" aria-hidden="true"></i>&nbsp;Edit</button>&nbsp;
-            </Link>
-            <button type="button" className="btn btn-outline-danger" data-toggle="modal" data-target={`#postModal-${this.props.post.path}`}>
-              <i className="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete
-            </button>
+            <div className="btn-toolbar justify-content-between">
+              <div className="btn-group">
+                <Link to={`/dash/posts/${this.props.post.path}`}>
+                  <button type="button" className="btn btn-outline-primary">
+                    <i className="fa fa-pencil" aria-hidden="true"></i>&nbsp;Edit
+                  </button>
+                </Link>&nbsp;
+                <Link to={`/p/${this.props.post.path}`}>
+                  <button type="button" className="btn btn-outline-success">
+                    <i className="fa fa-eye" aria-hidden="true"></i>&nbsp;View
+                  </button>
+                </Link>
+              </div>
+              <div className="btn-group">
+                <button type="button" className="btn btn-outline-danger" data-toggle="modal" data-target={`#postModal-${this.props.post.path}`}>
+                  <i className="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -16,16 +16,22 @@ export default class DashPostSideNav extends Component {
       paddingRight: 0
     };
 
+    let sideBarNavItemStyle = {
+      width: '100%',
+      marginLeft: 0,
+      borderRadius: 0
+    };
+
     return(
       <div>
         <nav className="col-sm-3 col-md-2 hidden-xs-down bg-fadded" style={sideBarStyle}>
           <ul className="nav flex-column">
             <li className="nav-item">
-              <button className="nav-item btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                Date
+              <button style={sideBarNavItemStyle} className="btn btn-primary btn-block" type="button" data-toggle="collapse" data-target="#dateCollapse" aria-expanded="false" aria-controls="dateCollapse">
+                Creation Date & Time
               </button>
             </li>
-            <div className="collapse" id="collapseExample">
+            <div className="collapse" id="dateCollapse">
               <div className="card card-block">
                 <div className="form-group">
                   <label htmlFor="createdAt">Date</label>
