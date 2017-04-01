@@ -11,8 +11,12 @@ class Dash extends Component {
           <DashNavbar />
           <div className="container-fluid">
             <div className="row">
-              <DashSideNav />
-              <DashOpView />
+              <div className="col-2">
+                <DashSideNav />
+              </div>
+              <div className="col-10">
+                <DashOpView />
+              </div>
             </div>
           </div>
         </div>
