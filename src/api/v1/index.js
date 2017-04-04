@@ -53,12 +53,14 @@ router.post('/auth', (req, res) => {
   });
 });
 
-router.post('/auth/:token', (req, res) => {
-  if (jwt.verify(req.params.token, "testkey")) {
-    res.sendStatus(200);
-  } else {
-    res.sendStatus(401);
-  }
+router.post('/auth/verify', (req, res) => {
+  jwt.verify(req.body.token, "testkey", (err, decoded) => {
+    if (err) {
+      res.sendStatus(401);
+    } else {
+      res.sendStatus(200);
+    }
+  });
 });
 
 // Begin blog post API
@@ -176,6 +178,7 @@ router.post('/post', authenticated, (req, res, next) => {
         draft: req.body.draft ? true : false,
         path: slug(req.body.title, { lower: true }),
         url: '/p/' + slug(req.body.title, { lower: true }),
+        createdAt: req.body.createdAt,
         UserId: cachedUserRes.id,
         SiteId: cachedSiteRes.id,
       }).then((result) => {
@@ -193,27 +196,46 @@ router.post('/post', authenticated, (req, res, next) => {
 });
 
 router.put('/post/:path', authenticated, (req, res, next) => {
-  Post.findOne({
+  Post.update({
+    title: req.body.title,
+    content: req.body.content,
+    rendered: markdown.render(req.body.content),
+    excerpt: excerpter(req.body.content),
+    draft: req.body.draft ? true : false,
+    path: slug(req.body.title, { lower: true }),
+    url: '/p/' + slug(req.body.title, { lower: true }),
+    createdAt: req.body.createdAt
+  }, {
     where: {
       path: req.params.path, 
     },
     rejectOnEmpty: true
-  }).then((post) => {
-    post.update({
-      title: req.body.title,
-      content: req.body.content,
-      rendered: markdown.render(req.body.content),
-      excerpt: excerpter(req.body.content),
-      draft: req.body.draft ? true : false,
-      path: slug(req.body.title, { lower: true }),
-      url: '/p/' + slug(req.body.title, { lower: true }),
-    }).then((result) => {
-      res.send(result);
-    }).catch((error) => {
-      res.send(error);
-    });
+  }).then((result) => {
+    res.send(result);
   }).catch((error) => {
-    res.send(error);
+    Site.findOne().then((cachedSiteRes) => {
+      User.findOne().then((cachedUserRes) => {
+        Post.create({
+          title: req.body.title,
+          content: req.body.content,
+          rendered: markdown.render(req.body.content),
+          excerpt: excerpter(req.body.content),
+          draft: req.body.draft ? true : false,
+          path: slug(req.body.title, { lower: true }),
+          url: '/p/' + slug(req.body.title, { lower: true }),
+          UserId: cachedUserRes.id,
+          SiteId: cachedSiteRes.id,
+        }).then((result) => {
+          res.statusStatus(201);
+        }).catch((error) => {
+          res.sendStatus(409);
+        });
+      }).catch((error) => {
+        res.sendStatus(500);
+      });
+    }).catch((error) => {
+      res.sendStatus(500);
+    });
   });
 });
 
@@ -230,7 +252,11 @@ router.delete('/post/:path', authenticated, (req, res, next) => {
 });
 
 router.get('/user', authenticated, (req, res, next) => {
-  User.findOne().then((user) => {
+  User.findOne({
+    attributes: {
+      exclude: ['password']
+    }
+  }).then((user) => {
     res.send(user);
   }).catch((error) => {
     res.send(error);
@@ -239,11 +265,17 @@ router.get('/user', authenticated, (req, res, next) => {
 
 router.put('/user', authenticated, (req, res, next) => {
   User.findOne().then((user) => {
+    let password = user.password;
+    if (req.body.password && user.validPassword(req.body.password)) {
+      if (req.body.newPassword) {
+        password = User.generateHash(req.body.newPassword);
+      }
+    }
     user.update({
       username: req.body.username,
       name: req.body.name,
       email: req.body.email,
-      password: User.generateHash(req.body.password)
+      password: password,
     }).then((response) => {
       res.send(response);
     }).catch((error) => {
@@ -307,14 +339,18 @@ router.get('/image/file/:file_name', (req, res, next) => {
 });
 
 router.post('/image', authenticated, image_upload.single('image'), (req, res, next) => {
+  console.log(req.body);
+  console.log(req.file);
+  let postId = req.body.postId ? req.body.postId : null;
   Image.create({
     path: '/' + req.file.path,
     file_name: req.file.filename,
-    file_path: path.resolve(req.file.destination + req.file.filename)
+    file_path: path.resolve(req.file.destination + req.file.filename),
+    PostId: postId
   }).then((response) => {
     res.send(response);
-  }).catch((error) => {
-    res.send(error);
+  }).catch(() => {
+    res.sendStatus(400);
   });
 });
 
@@ -396,10 +432,10 @@ router.delete('/page/:path', authenticated, (req, res, next) => {
     where: {
       path: req.params.path
     }
-  }).then((response) => {
-    res.send(response);
+  }).then(() => {
+    res.sendStatus(200);
   }).catch((error) => {
-    res.send(error);
+    res.sendStatus(400);
   });
 });
 
@@ -414,12 +450,13 @@ router.post('/page', authenticated, (req, res, next) => {
       url: '/s/' + slug(req.body.title, { lower: true }),
       SiteId: cachedSiteRes.id,
     }).then((result) => {
-      res.send(result);
-    }).catch((error) => {
-      res.send(error);
+      res.location(locations.page + result.path);
+      res.status(200).send(result);
+    }).catch(() => {
+      res.send(409);
     });
-  }).catch((error) => {
-    res.send(error);
+  }).catch(() => {
+    res.send(500);
   });
 });
 
