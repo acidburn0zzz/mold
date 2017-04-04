@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React from 'react';
 import axios from './axios';
 
-class LoginForm extends Component {
+class LoginForm extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -18,7 +18,8 @@ class LoginForm extends Component {
       this.setState({ [event.target.name]: event.target.value });
   }
 
-  handleAuth = () => {
+  handleAuth = (event) => {
+    event.preventDefault();
     axios.post('/auth', {
       username: this.state.username,
       password: this.state.password,
@@ -55,7 +56,7 @@ class LoginForm extends Component {
               Login
             </h3>
             <div className="card-block">
-              <form>
+              <form onSubmit={this.handleAuth}>
                 <div className="form-group">
                   <input type="text" name="username" className="form-control" value={this.state.username} placeholder="Username" onChange={this.handleInputChange}/>
                 </div>
@@ -74,8 +75,8 @@ class LoginForm extends Component {
                     </label>
                   </div>
                 </div>
+              <button type="submit" className="btn btn-primary"><i className="fa fa-sign-in" aria-hidden="true"></i>&nbsp;Login</button>
               </form>
-              <button onClick={() => this.handleAuth()} className="btn btn-primary"><i className="fa fa-sign-in" aria-hidden="true"></i>&nbsp;Login</button>
             </div>
           </div>
         </div>

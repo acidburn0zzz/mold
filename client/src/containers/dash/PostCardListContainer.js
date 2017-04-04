@@ -25,9 +25,8 @@ export default class PostCardListContainer extends React.Component {
   }
 
   render() {
-    let style = { paddingTop: 65 };
     return(
-      <div style={style}>
+      <div>
         {this.state.posts.map(post => 
           <PostCard key={post.id} post={post} deletePost={this.deletePost} />
         )}

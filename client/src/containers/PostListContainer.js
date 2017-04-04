@@ -22,7 +22,10 @@ export default class PostListContainer extends Component {
       <div>
         <div style={style}>
           {this.state.posts.map(post => 
-            <PostBrief key={post.id} style={style} post={post} user={post.User} />
+            <div key={post.id}>
+              <PostBrief post={post} user={post.User} />
+              <hr/>
+            </div>
           )}
         </div>
       </div>

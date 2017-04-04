@@ -14,7 +14,8 @@ export default class DashPostComposePreview extends React.Component {
       path: "",
       createdAtDate: {},
       createdAtTime: {},
-      postChangeSuccessful: {},
+      postChangeSuccessful: false,
+      titleConflict: false,
     };
   }
 
@@ -32,9 +33,6 @@ export default class DashPostComposePreview extends React.Component {
     });
   }
 
-  submitFeaturedImage = () => {
-  }
-
   submitPostChanges = () => {
     axios.put('/post/' + this.state.path, {
       title: this.state.title,
@@ -43,9 +41,31 @@ export default class DashPostComposePreview extends React.Component {
       createdAt: moment(`${this.state.createdAtDate} ${this.state.createdAtTime}`, "YYYY-MM-DD HH:mm")
     }).then((res) => {
       this.setState({ postChangeSuccessful: true });
-    }).catch(() => {
-
+    }).catch((err) => {
+      this.setState({ titleConflict: true });
     });
+  }
+
+  renderPostSubmitStatus = () => {
+    if (this.state.postChangeSuccessful) {
+      return (
+        <div className="alert alert-success alert-dismissible fade show" role="alert">
+          <button type="button" className="close" data-dismiss="alert" aria-label="Close" onClick={() => { this.setState({postChangeSuccessful: false }) }}>
+            <span aria-hidden="true">&times;</span>
+          </button>
+          Post Saved
+        </div>
+      );
+    } else if (this.state.titleConflict) {
+      return(
+        <div className="alert alert-danger alert-dismissible fade show" role="alert">
+          <button type="button" className="close" data-dismiss="alert" aria-label="Close" onClick={() => { this.setState({titleConflict: false }) }}>
+            <span aria-hidden="true">&times;</span>
+          </button>
+          Post does not have a unique title.
+        </div>
+      );
+    }
   }
 
   handleInputChange = (event) => {
@@ -65,27 +85,25 @@ export default class DashPostComposePreview extends React.Component {
       bottom: 0,
       right: 0,
       overflowY: "scroll",
+      height: "100%",
       width: "50%"
     };
 
     return(
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-6">
-            <PostCompose
-              title={this.state.title}
-              content={this.state.content}
-              draft={this.state.draft}
-              postChangeSuccessful={this.state.postChangeSuccessful}
-              handleInputChange={this.handleInputChange}
-              handleContentChange={this.handleContentChange}
-              submitPostChanges={this.submitPostChanges} />
-          </div>
-          <div className="col-6" style={previewStyle}>
-            <PostPreview
-              title={this.state.title}
-              content={this.state.content} />
-          </div>
+      <div>
+        <div className="col-6">
+          <PostCompose
+            title={this.state.title}
+            content={this.state.content}
+            draft={this.state.draft}
+            handleInputChange={this.handleInputChange}
+            handleContentChange={this.handleContentChange}
+            submitPostChanges={this.submitPostChanges} />
+        </div>
+        <div className="col-6" style={previewStyle}>
+          <PostPreview
+            title={this.state.title}
+            content={this.state.content} />
         </div>
       </div>
     );

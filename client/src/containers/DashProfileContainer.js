@@ -60,7 +60,7 @@ export default class DashProfileContainer extends React.Component {
 
   render() {
     return(
-      <div style={{ paddingTop: 65 }}>
+      <div>
         {this.renderSubmitStatus()}
         <Profile
           {...this.state} handleInputChange={this.handleInputChange} submitProfileChanges={this.submitProfileChanges} />

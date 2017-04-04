@@ -17,17 +17,19 @@ export default class PageCardListContainer extends React.Component {
   }
 
   deletePage = (page) => {
-    axios.delete('/page/' + page.path).then((res) => {
+    axios.delete('/page/' + page.path)
+      .then((res) => {
       let pages = this.state.pages.slice();
       pages.splice(pages.indexOf(page), 1);
       this.setState({ pages: pages });
+    }).catch(() => {
+
     });
   }
 
   render() {
-    let style = { paddingTop: 65 };
     return(
-      <div style={style}>
+      <div>
         {this.state.pages.map(page => 
           <PageCard key={page.id} page={page} deletePage={this.deletePage} />
         )}

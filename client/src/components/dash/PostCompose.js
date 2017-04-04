@@ -4,19 +4,9 @@ import 'brace/theme/github';
 import 'brace/mode/markdown';
 
 export default class PostCompose extends React.Component {
-  postChangeSuccessful = () => {
-    if (this.props.postChangeSuccessful) {
-      return (
-        <div>
-          Post saved
-        </div>
-      );
-    }
-  }
-
   render() {
     return(
-      <div style={{ paddingTop: 65 }}>
+      <div>
         <form>
           <div className="form-group">
             <label htmlFor="title">Title</label>
@@ -34,11 +24,10 @@ export default class PostCompose extends React.Component {
               mode="markdown"
               theme="github"
               width="100%"
-              height="600px"
+              height="calc(70vh)"
               onChange={this.props.handleContentChange}
               fontSize={16}
-              editorProps={{ $blockScrolling: Infinity }}
-            />
+              editorProps={{ $blockScrolling: Infinity }} />
           </div>
           <div className="form-group">
             <div className="form-check">
@@ -54,7 +43,6 @@ export default class PostCompose extends React.Component {
           </div>
         </form>
         <button className="btn btn-primary" onClick={this.props.submitPostChanges}>Submit</button>
-        {this.postChangeSuccessful}
       </div>
     );
   }

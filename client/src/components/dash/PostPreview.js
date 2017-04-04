@@ -24,7 +24,7 @@ export default class PostPreview extends React.Component {
       __html: markdown.render(`# ${this.props.title}\n----\n\n${this.props.content}`)
     };
     return(
-      <div style={{ paddingTop: 65 }}>
+      <div>
         <div dangerouslySetInnerHTML={innerHtml} />
       </div>
     );

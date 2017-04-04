@@ -1,6 +1,6 @@
 import React from 'react';
 import PostCompose from '../../components/dash/PostCompose';
-import DashPostSideNav from '../../components/dash/DashPostSideNav';
+import PostPreview from '../../components/dash/PostPreview';
 import moment from 'moment';
 import axios from '../../axios';
 
@@ -42,22 +42,32 @@ export default class NewPostContainer extends React.Component {
   }
 
   render() {
+    let previewStyle = {
+      position: "absolute",
+      top: 0,
+      bottom: 0,
+      right: 0,
+      overflowY: "scroll",
+      height: "100%",
+      width: "50%"
+    };
     return(
       <div>
-      <PostCompose
-        title={this.state.title}
-        content={this.state.content}
-        draft={this.state.draft}
-        postChangeSuccessful={this.state.postChangeSuccessful}
-        handleInputChange={this.handleInputChange}
-        handleContentChange={this.handleContentChange}
-        submitPostChanges={this.submitPostChanges} />
-      <DashPostSideNav
-        createdAtDate={this.state.createdAtDate}
-        createdAtTime={this.state.createdAtTime}
-        handleInputChange={this.handleInputChange}
-      />
-    </div>
+        <div className="col-6">
+          <PostCompose
+            title={this.state.title}
+            content={this.state.content}
+            draft={this.state.draft}
+            handleInputChange={this.handleInputChange}
+            handleContentChange={this.handleContentChange}
+            submitPostChanges={this.submitPostChanges} />
+        </div>
+        <div className="col-6" style={previewStyle}>
+          <PostPreview
+            title={this.state.title}
+            content={this.state.content} />
+        </div>
+      </div>
     );
   }
 }
