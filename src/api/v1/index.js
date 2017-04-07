@@ -66,7 +66,13 @@ router.post('/auth/verify', (req, res) => {
 // Begin blog post API
 
 router.get('/post', authenticated, (req, res, next) => {
-  cachedPost.findAll({
+  let limit = 5;
+  let offset = 0;
+  req.query.limit ? limit = parseInt(req.query.limit) : null;
+  req.query.page ? offset = (parseInt(req.query.page) - 1) * limit : null;
+  cachedPost.findAndCountAll({
+    limit: limit,
+    offset: offset,
     order: [
       ['createdAt', 'DESC']
     ],
@@ -84,6 +90,7 @@ router.get('/post', authenticated, (req, res, next) => {
       }
     }],
   }).then((cachedPostRes) => {
+    cachedPostRes.total_pages = Math.ceil(cachedPostRes.count / limit);
     res.status(200).send(cachedPostRes);
   });
 });
