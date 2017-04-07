@@ -7,12 +7,23 @@ export default class PostCardListContainer extends React.Component {
     super();
     this.state = {
       posts: [],
+      page: 1
+    }
+  }
+
+  nextPage = () => {
+    this.setState({ page: this.state.page + 1 });
+  }
+
+  prevPage = () => {
+    if (this.state.page !== 1) {
+      this.setState({ page: this.state.page - 1 });
     }
   }
 
   componentDidMount() {
-    axios.get('/post/').then((res) => {
-      this.setState({ posts: res.data });
+    axios.get(`/post?page=${this.state.page}`).then((res) => {
+      this.setState({ posts: res.data.rows });
     });
   }
 
