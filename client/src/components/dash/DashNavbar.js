@@ -5,7 +5,7 @@ class DashNavbar extends Component {
   render() {
     return(
       <div>
-        <nav className="navbar navbar-toggleable-md navbar-light fixed-top bg-faded">
+        <nav className="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
           <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
@@ -15,6 +15,5 @@ class DashNavbar extends Component {
     );
   }
 }
-
 
 export default DashNavbar;

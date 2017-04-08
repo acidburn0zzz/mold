@@ -47,9 +47,17 @@ export default class DashSideNav extends Component {
                 </div>
               </li>
               <li className="nav-item dropdown">
-                <Link to="/dash/pages" style={sideBarNavItemStyle} className="nav-link">
+                <Link to="/dash/pages" style={sideBarNavItemStyle} className="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
                   <i className="fa fa-file-text-o fa-fw" aria-hidden="true"></i>&nbsp;Pages
                 </Link>
+                <div className="dropdown-menu">
+                  <Link exact={true} to="/dash/pages" className="dropdown-item">
+                    View All
+                  </Link>
+                  <Link exact={true} to="/dash/page/new" className="dropdown-item">
+                    New
+                  </Link>
+                </div>
               </li>
               <li className="nav-item">
                 <Link to="/dash/profile" style={sideBarNavItemStyle} className="nav-link">

@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from '../axios';
 import PageCard from '../components/dash/PageCard';
+import EmptyCard from '../components/dash/EmptyCard';
 
 export default class PageCardListContainer extends React.Component {
   constructor() {
@@ -30,9 +31,12 @@ export default class PageCardListContainer extends React.Component {
   render() {
     return(
       <div>
-        {this.state.pages.map(page => 
-          <PageCard key={page.id} page={page} deletePage={this.deletePage} />
-        )}
+        {this.state.pages.length === 0 ?
+            <EmptyCard to={"/dash/page/new"} />:
+            this.state.pages.map(page => 
+              <PageCard key={page.id} page={page} deletePage={this.deletePage} />
+            )
+        }
       </div>
     );
   }

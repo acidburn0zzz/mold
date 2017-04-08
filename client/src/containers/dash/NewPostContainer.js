@@ -8,8 +8,8 @@ export default class NewPostContainer extends React.Component {
   constructor() {
     super();
     this.state = {
-      title: "",
-      content: "",
+      title: "New Post",
+      content: "Start writing to see a live preview of your content",
       draft: true,
       path: "",
       createdAtDate: moment().format("YYYY-MM-DD"),
