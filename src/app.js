@@ -10,23 +10,12 @@ import v1API from './api/v1';
 import cors from 'cors';
 import {User, Site, Post, sequelize} from '../models';
 
-let sessionStore = require('connect-session-sequelize')(session.Store);
-let store = new sessionStore({ db: sequelize });
-store.sync();
-
 let app = express();
 app.use(cors());
 app.use(logger('common'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(session({
-  secret: 'crazy cool cat',
-  store: store,
-  saveUninitialized: false,
-  resave: false,
-  proxy: true
-}));
 app.use(passport.initialize());
 app.use(passport.session());
 

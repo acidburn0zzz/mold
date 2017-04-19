@@ -14,20 +14,20 @@ const fs = Promise.promisifyAll(require("fs"));
 
 let router = Router();
 
-const locations = {
-  post: '/api/v1/post/',
-  page: '/api/v1/page/',
-  image: '/api/v1/image/',
-};
-
 function excerpter(string) {
   let summary = new String(string);
   summary = summary.substr(0, summary.lastIndexOf(" ", 250));
   return markdown.render(summary.valueOf())
 }
 
-const authenticated = (req, res, next) => { return next() };
-//const authenticated = passport.authenticate('jwt', { session: false });
+const locations = {
+  post: '/api/v1/post/',
+  page: '/api/v1/page/',
+  image: '/api/v1/image/',
+};
+
+//const authenticated = (req, res, next) => { return next() };
+const authenticated = passport.authenticate('jwt', { session: false });
 
 router.get('/auth/google', passport.authenticate('google', { scope: ['email'] }));
 
@@ -96,7 +96,13 @@ router.get('/post', authenticated, (req, res, next) => {
 });
 
 router.get('/post/published', (req, res, next) => {
-  cachedPost.findAll({
+  let limit = 5;
+  let offset = 0;
+  req.query.limit ? limit = parseInt(req.query.limit) : null;
+  req.query.page ? offset = (parseInt(req.query.page) - 1) * limit : null;
+  cachedPost.findAndCountAll({
+    limit: limit,
+    offset: offset,
     where: {
       draft: false,
     },
@@ -117,6 +123,7 @@ router.get('/post/published', (req, res, next) => {
       }
     }],
   }).then((cachedPostRes) => {
+    cachedPostRes.total_pages = Math.ceil(cachedPostRes.count / limit);
     res.status(200).send(cachedPostRes);
   });
 });
@@ -177,18 +184,9 @@ router.get('/post/:path', authenticated, (req, res, next) => {
 router.post('/post', authenticated, (req, res, next) => {
   Site.findOne().then((cachedSiteRes) => {
     User.findOne().then((cachedUserRes) => {
-      Post.create({
-        title: req.body.title,
-        content: req.body.content,
-        rendered: markdown.render(req.body.content),
-        excerpt: excerpter(req.body.content),
-        draft: req.body.draft ? true : false,
-        path: slug(req.body.title, { lower: true }),
-        url: '/p/' + slug(req.body.title, { lower: true }),
-        createdAt: req.body.createdAt,
-        UserId: cachedUserRes.id,
-        SiteId: cachedSiteRes.id,
-      }).then((result) => {
+      Post.create(
+        Post.new(req.body, cachedUserRes, cachedSiteRes)
+      ).then((result) => {
         res.location(locations.post + result.path);
         res.status(201).send(result);
       }).catch((error) => {
@@ -386,9 +384,21 @@ router.delete('/image/:id', authenticated, (req, res, next) => {
 
 router.get('/site', (req, res, next) => {
   cachedSite.findOne().then((cachedSiteRes) => {
-    res.send(cachedSiteRes);
+    res.status(200).send(cachedSiteRes);
   }).catch((error) => {
     res.sendStatus(500);
+  });
+});
+
+router.put('/site', authenticated, (req, res) => {
+  Site.findOne().then((site) => {
+    site.update({
+      name: req.body.name,
+    }).then(() => {
+      res.sendStatus(200);
+    }).catch(() => {
+
+    });
   });
 });
 
@@ -448,15 +458,9 @@ router.delete('/page/:path', authenticated, (req, res, next) => {
 
 router.post('/page', authenticated, (req, res, next) => {
   Site.findOne().then((cachedSiteRes) => {
-    Page.create({
-      title: req.body.title,
-      content: req.body.content,
-      rendered: markdown.render(req.body.content),
-      draft: req.body.draft ? true : false,
-      path: slug(req.body.title, { lower: true }),
-      url: '/s/' + slug(req.body.title, { lower: true }),
-      SiteId: cachedSiteRes.id,
-    }).then((result) => {
+    Page.create(
+      Page.new(req.body, cachedSiteRes)
+    ).then((result) => {
       res.location(locations.page + result.path);
       res.status(200).send(result);
     }).catch(() => {
