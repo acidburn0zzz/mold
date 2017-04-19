@@ -1,6 +1,12 @@
 language: node_js
 node_js:
         - "6"
+addons:
+        apt:
+                packages:
+                         - postgresql-contrib
+                         - libssl-dev
+                         - build-essential
 services:
         - postgresql
         - redis
@@ -9,7 +15,6 @@ before_script:
          - createdb mold_test
          - psql -d mold_development -c 'create extension "uuid-ossp"'
          - psql -d mold_test -c 'create extension "uuid-ossp"'
-         - apt install postgresql-contrib
          - npm install
          - npm install -g babel-cli gulp sequelize-cli mocha
          - npm test
