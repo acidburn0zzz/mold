@@ -5,8 +5,8 @@ services:
         - postgresql
         - redis
 before_script:
-         - create db mold_development
-         - create db mold_test
+         - createdb mold_development
+         - createdb mold_test
          - psql -d mold_development -c 'create extension "uuid-ossp"'
          - psql -d mold_test -c 'create extension "uuid-ossp"'
          - apt install postgresql-contrib
