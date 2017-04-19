@@ -16,6 +16,6 @@ before_script:
          - createdb mold_test
          - psql -d mold_development -c 'create extension "uuid-ossp"'
          - psql -d mold_test -c 'create extension "uuid-ossp"'
-         - npm install
-         - npm install -g babel-cli gulp sequelize-cli mocha
-         - npm test
+         - yarn install
+         - yarn global add babel-cli gulp sequelize-cli mocha
+         - yarn test
