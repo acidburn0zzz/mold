@@ -12,7 +12,7 @@ import {User, Site, Post, sequelize} from '../models';
 
 let app = express();
 app.use(cors());
-app.use(logger('common'));
+//app.use(logger('common'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());

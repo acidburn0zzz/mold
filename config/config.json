@@ -4,20 +4,26 @@
     "password": null,
     "database": "mold_development",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "logging": false,
+    "jwt_key": "development_key"
   },
   "test": {
     "username": "postgres",
     "password": null,
     "database": "mold_test",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "logging": false,
+    "jwt_key": "test_key"
   },
   "production": {
     "username": "postgres",
     "password": null,
     "database": "mold_production",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "logging": false,
+    "jwt_key": "production_key"
   }
 }

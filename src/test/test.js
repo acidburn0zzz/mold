@@ -5,6 +5,7 @@ import chaiHttp from 'chai-http';
 import {app} from '../app';
 import {User, Post, Page, Site, Image, sequelize} from '../../models';
 import jwt from 'jsonwebtoken';
+let config = require('../../config/config.json')['test'];
 let should = chai.should();
 let expect = chai.expect;
 let assert = chai.assert;
@@ -95,7 +96,7 @@ describe('v1 API', function() {
     });
 
     it('POST /auth/verify with valid token, valid payload', function() {
-      let token = jwt.sign({ id: 1 }, "testkey");
+      let token = jwt.sign({ id: 1 }, config.jwt_key);
       return chai.request(app).post('/api/v1/auth/verify')
         .send({ token: token })
         .then((res) => {
@@ -104,7 +105,7 @@ describe('v1 API', function() {
     });
 
     it('POST /auth/verify with valid token, invalid payload', function() {
-      let token = jwt.sign({ id: 10 }, "testkey");
+      let token = jwt.sign({ id: 10 }, config.jwt_key);
       return chai.request(app).post('/api/v1/auth/verify')
         .send({ token: token })
         .catch((err) => {
@@ -123,7 +124,7 @@ describe('v1 API', function() {
   });
 
   describe('Post', function() {
-    let token = jwt.sign({ id: 1 }, "testkey");
+    let token = jwt.sign({ id: 1 }, config.jwt_key);
     it('GET /api/v1/post should return 401 without a JWT', function() {
       return chai.request(app).get('/api/v1/post')
         .catch((err) => {

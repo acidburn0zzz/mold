@@ -2,6 +2,8 @@ let GoogleClient = require('./config').GoogleClient;
 let Passport = require('passport');
 let GoogleStrat = require('passport-google-oauth').OAuth2Strategy;
 let LocalStrat = require('passport-local').Strategy;
+let env = process.env.NODE_ENV || 'development';
+let config = require('../../config/config.json')[env];
 import {User, Site} from '../../models';
 import {Strategy as JWTStrat, ExtractJwt} from 'passport-jwt';
 
@@ -56,7 +58,7 @@ Passport.use(new LocalStrat((username, password, next) => {
 
 Passport.use(new JWTStrat({
   jwtFromRequest: ExtractJwt.fromAuthHeader(),
-  secretOrKey: "testkey"
+  secretOrKey: config.jwt_key
 }, (jwt_payload, next) => {
   User.findOne({
     where: {

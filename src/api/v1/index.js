@@ -10,6 +10,9 @@ import jwt from 'jsonwebtoken';
 import {image_upload} from '../../config/multer';
 import passport from '../../config/passport';
 import Promise from 'bluebird';
+
+let env = process.env.NODE_ENV || 'development';
+let config = require('../../../config/config.json')[env];
 const fs = Promise.promisifyAll(require("fs"));
 
 let router = Router();
@@ -43,7 +46,7 @@ router.post('/auth', (req, res) => {
     rejectOnEmpty: true
   }).then((user) => {
     if (user.validPassword(req.body.password)) {
-      const token = jwt.sign({ id: user.id }, "testkey", req.body.remember_me ? null : { expiresIn: '1d' });
+      const token = jwt.sign({ id: user.id }, config.jwt_key, req.body.remember_me ? null : { expiresIn: '1d' });
       res.status(200).send({ token: token });
     } else {
       res.sendStatus(401);
@@ -54,7 +57,7 @@ router.post('/auth', (req, res) => {
 });
 
 router.post('/auth/verify', (req, res) => {
-  jwt.verify(req.body.token, "testkey", (err, decoded) => {
+  jwt.verify(req.body.token, config.jwt_key, (err, decoded) => {
     if (err) {
       res.sendStatus(401);
     } else {
