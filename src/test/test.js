@@ -49,21 +49,26 @@ describe('v1 API', function() {
           google_token: "",
           SiteId: site.id
         }).then((user) => {
-          Post.create(
-            Post.new({
-              title: "Test Post",
-              content: "Test body content with `some` markdown",
-              draft: false,
-              createdAt: new Date(),
-            }, user, site)).then(() => {
-              Post.create(
-                Post.new({
-                  title: "Test Draft Post",
-                  content: "Test body content with `some` markdown",
-                  draft: true,
-                  createdAt: new Date(),
-                }, user, site));
-            });
+          for (let i = 1; i <= 5; i++) {
+            Post.create(
+              Post.new({
+                title: `Test Post ${i}`,
+                content: "Test body content with `some` markdown",
+                draft: false,
+                createdAt: new Date()
+              }, user, site)
+            ).then();
+          }
+          for (let i = 5; i <= 10; i++) {
+            Post.create(
+              Post.new({
+                title: `Test Post ${i}`,
+                content: "Test body content with `some` markdown",
+                draft: true,
+                createdAt: new Date()
+              }, user, site)
+            ).then();
+          }
         });
       });
     });
@@ -124,7 +129,7 @@ describe('v1 API', function() {
   });
 
   describe('Post', function() {
-    let token = jwt.sign({ id: 1 }, config.jwt_key);
+    const token = jwt.sign({ id: 1 }, config.jwt_key);
     it('GET /api/v1/post should return 401 without a JWT', function() {
       return chai.request(app).get('/api/v1/post')
         .catch((err) => {
@@ -139,8 +144,8 @@ describe('v1 API', function() {
           expect(res).to.have.status(200);
           res.should.be.json;
           res.body.rows.should.be.array;
-          res.body.rows.length.should.equal(2);
-          res.body.rows[0].draft.should.equal(true);
+          res.body.rows.length.should.equal(5);
+          res.body.rows[1].draft.should.equal(true);
         });
     });
 
@@ -159,8 +164,37 @@ describe('v1 API', function() {
           expect(res).to.have.status(200);
           res.should.be.json;
           res.body.rows.should.be.array;
-          res.body.rows.length.should.equal(1);
+          res.body.rows.length.should.equal(5);
           res.body.rows[0].draft.should.equal(false);
+        });
+    });
+
+    it('GET /api/v1/post/published should return an array of public posts with limit = 2', function() {
+      return chai.request(app).get('/api/v1/post/published?limit=2')
+        .then((res) => {
+          expect(res).to.have.status(200);
+          res.should.be.json;
+          res.body.total_pages.should.equal(3);
+          res.body.rows.should.be.array;
+          res.body.rows.length.should.equal(2);
+          res.body.rows[0].draft.should.equal(false);
+        });
+    });
+
+    it('GET /api/v1/post/published/:path should return a public post', function() {
+      return chai.request(app).get('/api/v1/post/published/test-post-5')
+        .then((res) => {
+          expect(res).to.have.status(200);
+          res.body.title.should.equal("Test Post 5");
+          res.body.draft.should.equal(false);
+          res.should.be.json;
+        });
+    });
+
+    it('GET /api/v1/post/published/:path where :path doesn\'t exists should return a 404', function() {
+      return chai.request(app).get('/api/v1/post/published/test-post-10')
+        .catch((err) => {
+          expect(err).to.have.status(404);
         });
     });
   });
