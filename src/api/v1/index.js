@@ -58,7 +58,14 @@ router.post('/auth/verify', (req, res) => {
     if (err) {
       res.sendStatus(401);
     } else {
-      res.sendStatus(200);
+      cachedUser.findOne({
+        where: { id: decoded.id },
+        rejectOnEmpty: true
+      }).then(() => {
+        res.sendStatus(200);
+      }).catch(() => {
+        res.sendStatus(401);
+      });
     }
   });
 });
