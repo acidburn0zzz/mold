@@ -31,46 +31,15 @@ const locations = {
 
 //const authenticated = (req, res, next) => { return next() };
 const authenticated = passport.authenticate('jwt', { session: false });
+const local_authenticaton = passport.authenticate('local', { session: false });
 
-router.get('/auth/google', passport.authenticate('google', { scope: ['email'] }));
+router.post('/auth', local_authenticaton, (req, res) => {
+  const token = jwt.sign({ id: req.user.id }, config.jwt_key, req.body.remember_me ? null : { expiresIn: '1d' });
+  res.status(200).send({ token: token });
+});
 
-router.get('/auth/google/callback', passport.authenticate('google'), (req, res) => {
+router.post('/auth/verify', authenticated, (req, res, next) => {
   res.sendStatus(200);
-});
-
-router.post('/auth', (req, res) => {
-  User.findOne({
-    where: {
-      username: req.body.username
-    },
-    rejectOnEmpty: true
-  }).then((user) => {
-    if (user.validPassword(req.body.password)) {
-      const token = jwt.sign({ id: user.id }, config.jwt_key, req.body.remember_me ? null : { expiresIn: '1d' });
-      res.status(200).send({ token: token });
-    } else {
-      res.sendStatus(401);
-    }
-  }).catch(() => {
-    res.sendStatus(403);
-  });
-});
-
-router.post('/auth/verify', (req, res) => {
-  jwt.verify(req.body.token, config.jwt_key, (err, decoded) => {
-    if (err) {
-      res.sendStatus(401);
-    } else {
-      cachedUser.findOne({
-        where: { id: decoded.id },
-        rejectOnEmpty: true
-      }).then(() => {
-        res.sendStatus(200);
-      }).catch(() => {
-        res.sendStatus(401);
-      });
-    }
-  });
 });
 
 // Begin blog post API
@@ -192,18 +161,16 @@ router.get('/post/:path', authenticated, (req, res, next) => {
 });
 
 router.post('/post', authenticated, (req, res, next) => {
-  Site.findOne().then((cachedSiteRes) => {
-    User.findOne().then((cachedUserRes) => {
-      Post.create(
-        Post.new(req.body, cachedUserRes, cachedSiteRes)
-      ).then((result) => {
-        res.location(locations.post + result.path);
-        res.status(201).send(result);
-      }).catch((error) => {
-        res.sendStatus(409);
-      });
+  Site.findOne({
+    include: [{ model: User }],
+  }).then((cachedSiteRes) => {
+    Post.create(
+      Post.new(req.body, cachedSiteRes.User, cachedSiteRes)
+    ).then((result) => {
+      res.location(locations.post + result.path);
+      res.status(201).send(result);
     }).catch((error) => {
-      res.sendStatus(500);
+      res.sendStatus(409);
     });
   }).catch((error) => {
     res.sendStatus(500);
@@ -228,25 +195,23 @@ router.put('/post/:path', authenticated, (req, res, next) => {
   }).then((result) => {
     res.send(result);
   }).catch((error) => {
-    Site.findOne().then((cachedSiteRes) => {
-      User.findOne().then((cachedUserRes) => {
-        Post.create({
-          title: req.body.title,
-          content: req.body.content,
-          rendered: markdown.render(req.body.content),
-          excerpt: excerpter(req.body.content),
-          draft: req.body.draft ? true : false,
-          path: slug(req.body.title, { lower: true }),
-          url: '/p/' + slug(req.body.title, { lower: true }),
-          UserId: cachedUserRes.id,
-          SiteId: cachedSiteRes.id,
-        }).then((result) => {
-          res.statusStatus(201);
-        }).catch((error) => {
-          res.sendStatus(409);
-        });
+    Site.findOne({
+      include: [{ model: User }],
+    }).then((cachedSiteRes) => {
+      Post.create({
+        title: req.body.title,
+        content: req.body.content,
+        rendered: markdown.render(req.body.content),
+        excerpt: excerpter(req.body.content),
+        draft: req.body.draft ? true : false,
+        path: slug(req.body.title, { lower: true }),
+        url: '/p/' + slug(req.body.title, { lower: true }),
+        UserId: cachedSiteRes.User.id,
+        SiteId: cachedSiteRes.id,
+      }).then((result) => {
+        res.statusStatus(201);
       }).catch((error) => {
-        res.sendStatus(500);
+        res.sendStatus(409);
       });
     }).catch((error) => {
       res.sendStatus(500);

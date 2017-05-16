@@ -80,7 +80,7 @@ describe('v1 API', function() {
         .field('username', 'ayyy')
         .field('password', 'hi')
         .catch((err) => {
-          err.status.should.equal(403);
+          err.status.should.equal(400);
         });
     });
 
@@ -103,7 +103,7 @@ describe('v1 API', function() {
     it('POST /auth/verify with valid token, valid payload', function() {
       let token = jwt.sign({ id: 1 }, config.jwt_key);
       return chai.request(app).post('/api/v1/auth/verify')
-        .send({ token: token })
+        .set('Authorization', `JWT ${token}`)
         .then((res) => {
           res.status.should.equal(200);
         });
@@ -121,7 +121,7 @@ describe('v1 API', function() {
     it('POST /auth/verify with invalid token', function() {
       let token = jwt.sign({ id: 1 }, "garbage");
       return chai.request(app).post('/api/v1/auth/verify')
-        .send({ token: token })
+        .set('Authorization', "JWT " + token)
         .catch((err) => {
           err.status.should.equal(401);
         });

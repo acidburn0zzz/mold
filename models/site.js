@@ -7,6 +7,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Site.hasMany(models.Page);
+        Site.hasOne(models.User);
       }
     }
   });

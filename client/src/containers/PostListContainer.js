@@ -12,7 +12,7 @@ export default class PostListContainer extends Component {
 
   componentDidMount() {
     axios.get('/post/published').then((res) => {
-      this.setState({ posts: res.data });
+      this.setState({ posts: res.data.rows });
     });
   }
 
