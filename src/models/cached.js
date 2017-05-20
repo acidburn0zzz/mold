@@ -1,4 +1,4 @@
-import {sequelize} from '../../models';
+import {sequelize} from './index';
 import cache from 'sequelize-redis-cache';
 import redis from 'redis';
 

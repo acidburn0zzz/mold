@@ -1,6 +1,6 @@
 'use strict';
 
-import markdown from '../src/config/markdown';
+import markdown from '../config/markdown';
 import slug from 'slug';
 
 module.exports = function(sequelize, DataTypes) {

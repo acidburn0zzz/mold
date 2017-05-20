@@ -8,7 +8,7 @@ import passport from 'passport';
 import favicon from 'serve-favicon';
 import v1API from './api/v1';
 import cors from 'cors';
-import {User} from '../models';
+import {User} from './models';
 
 let app = express();
 app.use(cors());
@@ -30,21 +30,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-passport.serializeUser((user, next) => {
-  next(null, user);
-});
-
-passport.deserializeUser(function(user, next) {
-  User.findOne({
-    where: {
-      username: user.username
-    }
-  }).then(function(user) {
-    next(null, user);
-  });
-});
-
-// catch 404 and forward to error handler
 app.locals.pretty = true;
 
 if (app.get('env') == 'production') {

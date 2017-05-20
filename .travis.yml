@@ -12,10 +12,7 @@ services:
         - postgresql
         - redis
 before_script:
-         - createdb mold_development
-         - createdb mold_test
-         - psql -d mold_development -c 'create extension "uuid-ossp"'
-         - psql -d mold_test -c 'create extension "uuid-ossp"'
          - yarn install
          - yarn global add babel-cli gulp sequelize-cli mocha
+         - gulp db:setup
          - yarn test

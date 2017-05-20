@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import {Page, Post, Site, User, Image, sequelize} from '../../../models';
+import {Page, Post, Site, User, Image, sequelize} from '../../models';
 import {cachedPage, cachedPost, cachedSite, cachedUser, cachedImage} from '../../models/cached';
 import markdown from '../../config/markdown';
 import slug from 'slug';
@@ -10,12 +10,11 @@ import jwt from 'jsonwebtoken';
 import {image_upload} from '../../config/multer';
 import passport from '../../config/passport';
 import Promise from 'bluebird';
-import {postPutAssertBody} from './assert';
 import * as validations from './validations';
 import util from 'util';
 
 let env = process.env.NODE_ENV || 'development';
-let config = require('../../../config/config.json')[env];
+let config = require('../../config/config.json')[env];
 const fs = Promise.promisifyAll(require("fs"));
 
 let router = Router();
