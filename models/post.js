@@ -34,6 +34,18 @@ module.exports = function(sequelize, DataTypes) {
           SiteId: site.id
         };
       },
+      update: function(body) {
+        return {
+          title: body.title,
+          content: body.content,
+          rendered: markdown.render(body.content),
+          excerpt: excerpter(body.content),
+          draft: body.draft ? true : false,
+          path: slug(body.title, { lower: true }),
+          url: '/p/' + slug(body.title, { lower: true }),
+          createdAt: body.createdAt,
+        };
+      },
       associate: function(models) {
         Post.belongsTo(models.User, {
           foreignKey: {

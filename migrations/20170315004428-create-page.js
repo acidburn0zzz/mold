@@ -9,6 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       title: {
+        unique: true,
         type: Sequelize.STRING
       },
       content: {
@@ -24,6 +25,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       url: {
+        unique: true,
         type: Sequelize.STRING
       },
       createdAt: {

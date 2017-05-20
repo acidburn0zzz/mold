@@ -10,6 +10,9 @@ import jwt from 'jsonwebtoken';
 import {image_upload} from '../../config/multer';
 import passport from '../../config/passport';
 import Promise from 'bluebird';
+import {postPutAssertBody} from './assert';
+import * as validations from './validations';
+import util from 'util';
 
 let env = process.env.NODE_ENV || 'development';
 let config = require('../../../config/config.json')[env];
@@ -23,9 +26,18 @@ function excerpter(string) {
   return markdown.render(summary.valueOf())
 }
 
+function getPostQueryParams(query) {
+  return Object.freeze({
+    limit: query.limit ? parseInt(query.limit) : 5,
+    get offset() {
+      query.page ? (parseInt(query.page) - 1) * this.limit : 0;
+    }
+  });
+}
+
 const locations = {
-  post: '/api/v1/post/',
-  page: '/api/v1/page/',
+  post: '/api/v1/post/published/',
+  page: '/api/v1/page/published/',
   image: '/api/v1/image/',
 };
 
@@ -45,13 +57,10 @@ router.post('/auth/verify', authenticated, (req, res, next) => {
 // Begin blog post API
 
 router.get('/post', authenticated, (req, res, next) => {
-  let limit = 5;
-  let offset = 0;
-  req.query.limit ? limit = parseInt(req.query.limit) : null;
-  req.query.page ? offset = (parseInt(req.query.page) - 1) * limit : null;
+  const queryParams = getPostQueryParams(req.query);
   cachedPost.findAndCountAll({
-    limit: limit,
-    offset: offset,
+    limit: queryParams.limit,
+    offset: queryParams.offset,
     order: [
       ['createdAt', 'DESC']
     ],
@@ -69,19 +78,16 @@ router.get('/post', authenticated, (req, res, next) => {
       }
     }],
   }).then((cachedPostRes) => {
-    cachedPostRes.total_pages = Math.ceil(cachedPostRes.count / limit);
+    cachedPostRes.total_pages = Math.ceil(cachedPostRes.count / queryParams.limit);
     res.status(200).send(cachedPostRes);
   });
 });
 
 router.get('/post/published', (req, res, next) => {
-  let limit = 5;
-  let offset = 0;
-  req.query.limit ? limit = parseInt(req.query.limit) : null;
-  req.query.page ? offset = (parseInt(req.query.page) - 1) * limit : null;
+  const queryParams = getPostQueryParams(req.query);
   cachedPost.findAndCountAll({
-    limit: limit,
-    offset: offset,
+    limit: queryParams.limit,
+    offset: queryParams.offset,
     where: {
       draft: false,
     },
@@ -102,7 +108,7 @@ router.get('/post/published', (req, res, next) => {
       }
     }],
   }).then((cachedPostRes) => {
-    cachedPostRes.total_pages = Math.ceil(cachedPostRes.count / limit);
+    cachedPostRes.total_pages = Math.ceil(cachedPostRes.count / queryParams.limit);
     res.status(200).send(cachedPostRes);
   });
 });
@@ -160,7 +166,7 @@ router.get('/post/:path', authenticated, (req, res, next) => {
   });
 });
 
-router.post('/post', authenticated, (req, res, next) => {
+router.post('/post', authenticated, validations.validatePostData, (req, res, next) => {
   Site.findOne({
     include: [{ model: User }],
   }).then((cachedSiteRes) => {
@@ -177,44 +183,27 @@ router.post('/post', authenticated, (req, res, next) => {
   });
 });
 
-router.put('/post/:path', authenticated, (req, res, next) => {
-  Post.update({
-    title: req.body.title,
-    content: req.body.content,
-    rendered: markdown.render(req.body.content),
-    excerpt: excerpter(req.body.content),
-    draft: req.body.draft ? true : false,
-    path: slug(req.body.title, { lower: true }),
-    url: '/p/' + slug(req.body.title, { lower: true }),
-    createdAt: req.body.createdAt
-  }, {
+router.put('/post/:path', authenticated, validations.validatePostData, (req, res, next) => {
+  Post.findOne({
     where: {
-      path: req.params.path, 
+      path: req.params.path,
     },
     rejectOnEmpty: true
-  }).then((result) => {
-    res.send(result);
-  }).catch((error) => {
-    Site.findOne({
+  }).then((post) => {
+    post.update(Post.update(req.body)).then(() => {
+      res.sendStatus(204);
+    });
+  }).catch(() => {
+    cachedSite.findOne({
       include: [{ model: User }],
     }).then((cachedSiteRes) => {
-      Post.create({
-        title: req.body.title,
-        content: req.body.content,
-        rendered: markdown.render(req.body.content),
-        excerpt: excerpter(req.body.content),
-        draft: req.body.draft ? true : false,
-        path: slug(req.body.title, { lower: true }),
-        url: '/p/' + slug(req.body.title, { lower: true }),
-        UserId: cachedSiteRes.User.id,
-        SiteId: cachedSiteRes.id,
-      }).then((result) => {
-        res.statusStatus(201);
-      }).catch((error) => {
+      Post.create(
+        Post.new(req.body, cachedSiteRes.User, cachedSiteRes)
+      ).then(() => {
+        res.sendStatus(201);
+      }).catch(() => {
         res.sendStatus(409);
       });
-    }).catch((error) => {
-      res.sendStatus(500);
     });
   });
 });
@@ -319,8 +308,6 @@ router.get('/image/file/:file_name', (req, res, next) => {
 });
 
 router.post('/image', authenticated, image_upload.single('image'), (req, res, next) => {
-  console.log(req.body);
-  console.log(req.file);
   let postId = req.body.postId ? req.body.postId : null;
   Image.create({
     path: '/' + req.file.path,
@@ -344,13 +331,13 @@ router.delete('/image/:id', authenticated, (req, res, next) => {
     fs.unlinkAsync(image.file_path).then(() => {
       image.destroy().then(() => {
         res.sendStatus(200);
-      }).catch((error) => {
+      }).catch(() => {
         res.sendStatus(500);
       });
     }).catch(() => {
       res.sendStatus(500);
     });
-  }).catch((error) => {
+  }).catch(() => {
     res.sendStatus(404);
   });
 });
@@ -360,7 +347,7 @@ router.delete('/image/:id', authenticated, (req, res, next) => {
 router.get('/site', (req, res, next) => {
   cachedSite.findOne().then((cachedSiteRes) => {
     res.status(200).send(cachedSiteRes);
-  }).catch((error) => {
+  }).catch(() => {
     res.sendStatus(500);
   });
 });
@@ -372,7 +359,7 @@ router.put('/site', authenticated, (req, res) => {
     }).then(() => {
       res.sendStatus(200);
     }).catch(() => {
-
+      res.sendStatus(500);
     });
   });
 });
@@ -386,8 +373,8 @@ router.get('/page/published', (req, res, next) => {
     },
   }).then((pages) => {
     res.send(pages);
-  }).catch((error) => {
-    res.send(error);
+  }).catch(() => {
+    res.sendStatus(500);
   });
 });
 
@@ -404,7 +391,7 @@ router.get('/page/published/:path', (req, res, next) => {
 });
 
 router.get('/page', authenticated, (req, res, next) => {
-  Page.findAll().then((pages) => {
+  cachedPage.findAll().then((pages) => {
     res.send(pages);
   }).catch((error) => {
     res.send(error);
@@ -412,7 +399,10 @@ router.get('/page', authenticated, (req, res, next) => {
 });
 
 router.get('/page/:path', authenticated, (req, res, next) => {
-  Page.findOne({
+  cachedPage.findOne({
+    where: {
+      path: req.params.path,
+    },
     rejectOnEmpty: true
   }).then((page) => {
     res.send(page);
@@ -431,8 +421,8 @@ router.delete('/page/:path', authenticated, (req, res, next) => {
   });
 });
 
-router.post('/page', authenticated, (req, res, next) => {
-  Site.findOne().then((cachedSiteRes) => {
+router.post('/page', authenticated, validations.validatePageData, (req, res, next) => {
+  cachedSite.findOne().then((cachedSiteRes) => {
     Page.create(
       Page.new(req.body, cachedSiteRes)
     ).then((result) => {
@@ -443,6 +433,29 @@ router.post('/page', authenticated, (req, res, next) => {
     });
   }).catch(() => {
     res.send(500);
+  });
+});
+
+router.put('/page/:path', authenticated, validations.validatePageData, (req, res, next) => {
+  Page.findOne({
+    where: {
+      path: req.params.path,
+    },
+    rejectOnEmpty: true
+  }).then((page) => {
+    page.update(Page.update(req.body)).then(() => {
+      res.sendStatus(204);
+    });
+  }).catch(() => {
+    cachedSite.findOne().then((cachedSiteRes) => {
+      Page.create(
+        Page.new(req.body, cachedSiteRes)
+      ).then(() => {
+        res.sendStatus(201);
+      }).catch(() => {
+        res.sendStatus(409);
+      });
+    });
   });
 });
 

@@ -1,23 +1,25 @@
 import express from 'express';
+import expressValidator from 'express-validator';
 import path from 'path';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import passport from 'passport';
-import session from 'express-session';
 import favicon from 'serve-favicon';
 import v1API from './api/v1';
 import cors from 'cors';
-import {User, Site, Post, sequelize} from '../models';
+import {User} from '../models';
 
 let app = express();
 app.use(cors());
-app.use(logger('common'));
+if (process.env.NODE_ENV !== 'test') {
+  app.use(logger('common'));
+}
 app.use(bodyParser.json());
+app.use(expressValidator());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(passport.initialize());
-app.use(passport.session());
 
 app.use('/api/v1', v1API);
 app.use('/static', express.static(path.join(__dirname, 'static')));

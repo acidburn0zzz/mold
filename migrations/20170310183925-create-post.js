@@ -28,6 +28,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       url: {
+        unique: true,
         type: Sequelize.STRING
       },
       createdAt: {
