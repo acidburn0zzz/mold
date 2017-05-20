@@ -7,10 +7,12 @@ const envs = ['development', 'test', 'production'];
 gulp.task('db:setup', function() {
   if (process.argv[3] === '--db') {
     console.log(`createdb mold_${process.argv[4]}`);
+    exec(`dropdb --if-exists mold_${process.argv[4]}`, output);
     exec(`createdb mold_${process.argv[4]}`, output);
   } else {
     envs.map((env) => {
       console.log(`createdb mold_${env}`);
+      exec(`dropdb --if-exists mold_${env}`, output);
       exec(`createdb mold_${env}`, output);
       console.log(`psql -d mold_${env} -c 'create extension "uuid-ossp"'`);
       exec(`psql -d mold_${env} -c 'create extension "uuid-ossp"'`, output);
@@ -42,9 +44,17 @@ gulp.task('reroll', function() {
 });
 
 gulp.task('reset', function() {
-  exec('sequelize db:migrate:undo:all', output);
-  exec('sequelize db:migrate', output);
-  exec('sequelize db:seed:all', output);
+  if (process.argv[3] === '--db') {
+    exec(`sequelize db:migrate:undo:all --env ${process.argv[4]} --migrations-path=./src/migrations --config=./src/config/config.json`, output);
+    exec(`sequelize db:migrate --env ${process.argv[4]} --migrations-path=./src/migrations --config=./src/config/config.json`, output);
+    exec(`sequelize db:seed:all --env ${process.argv[4]} --seeders-path=./src/seeders --config=./src/config/config.json`, output);
+  } else {
+    envs.forEach((env) => {
+      exec(`sequelize db:migrate:undo:all --env ${env} --migrations-path=./src/migrations --config=./src/config/config.json`, output);
+      exec(`sequelize db:migrate --env ${env} --migrations-path=./src/migrations --config=./src/config/config.json`, output);
+      exec(`sequelize db:seed:all --env ${env} --seeders-path=./src/seeders --config=./src/config/config.json`, output);
+    });
+  }
 });
 
 gulp.task('initial-setup', function() {

@@ -15,4 +15,5 @@ before_script:
          - yarn install
          - yarn global add babel-cli gulp sequelize-cli mocha
          - gulp db:setup
+         - gulp reset --db test
          - yarn test
