@@ -1,5 +1,3 @@
-'use strict';
-
 import markdown from '../config/markdown';
 import slug from 'slug';
 
@@ -9,8 +7,8 @@ function excerpter(string) {
   return markdown.render(summary.valueOf())
 }
 
-module.exports = function(sequelize, DataTypes) {
-  var Post = sequelize.define('Post', {
+export default function(sequelize, DataTypes) {
+  return sequelize.define('Post', {
     title: DataTypes.STRING,
     content: DataTypes.TEXT,
     rendered: DataTypes.TEXT,
@@ -47,19 +45,18 @@ module.exports = function(sequelize, DataTypes) {
         };
       },
       associate: function(models) {
-        Post.belongsTo(models.User, {
+        this.belongsTo(models.User, {
           foreignKey: {
             allowNull: false
           }
         });
-        Post.belongsTo(models.Site, {
+        this.belongsTo(models.Site, {
           foreignKey: {
             allowNull: false
           }
         });
-        Post.hasOne(models.Image);
+        this.hasOne(models.Image);
       }
     }
   });
-  return Post;
 };

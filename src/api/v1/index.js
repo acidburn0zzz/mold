@@ -66,14 +66,14 @@ router.get('/post', authenticated, (req, res, next) => {
     include: [{
       model: User,
       attributes: {
-        exclude: User.postDefaultExcludeAttributes
+        exclude: User.defaultExcludeAttributes()
       }
     }, {
       model: Image
     }, {
       model: Site,
       attributes: {
-        exclude: Site.postDefaultExcludeAttributes
+        exclude: Site.defaultExcludeAttributes()
       }
     }],
   }).then((cachedPostRes) => {
@@ -96,14 +96,14 @@ router.get('/post/published', (req, res, next) => {
     include: [{
       model: User,
       attributes: {
-        exclude: User.postDefaultExcludeAttributes
+        exclude: User.defaultExcludeAttributes()
       }
     }, {
       model: Image
     }, {
       model: Site,
       attributes: {
-        exclude: Site.postDefaultExcludeAttributes
+        exclude: Site.defaultExcludeAttributes()
       }
     }],
   }).then((cachedPostRes) => {
@@ -121,14 +121,14 @@ router.get('/post/published/:path', (req, res, next) => {
     include: [{
       model: User,
       attributes: {
-        exclude: User.postDefaultExcludeAttributes
+        exclude: User.defaultExcludeAttributes()
       }
     }, {
       model: Image
     }, {
       model: Site,
       attributes: {
-        exclude: Site.postDefaultExcludeAttributes
+        exclude: Site.defaultExcludeAttributes()
       }
     }],
     rejectOnEmpty: true
@@ -147,14 +147,14 @@ router.get('/post/:path', authenticated, (req, res, next) => {
     include: [{
       model: User,
       attributes: {
-        exclude: User.postDefaultExcludeAttributes
+        exclude: User.defaultExcludeAttributes()
       }
     }, {
       model: Image
     }, {
       model: Site,
       attributes: {
-        exclude: Site.postDefaultExcludeAttributes
+        exclude: Site.defaultExcludeAttributes()
       }
     }],
     rejectOnEmpty: true
@@ -255,7 +255,7 @@ router.put('/user', authenticated, (req, res, next) => {
 router.get('/user/posts', (req, res, next) => {
   cachedUser.findOne({
     attributes: {
-      exclude: User.postDefaultExcludeAttributes
+      exclude: User.defaultExcludeAttributes()
     },
     include: [{
       model: Post,

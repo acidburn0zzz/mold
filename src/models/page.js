@@ -1,10 +1,8 @@
-'use strict';
-
 import markdown from '../config/markdown';
 import slug from 'slug';
 
-module.exports = function(sequelize, DataTypes) {
-  var Page = sequelize.define('Page', {
+export default function(sequelize, DataTypes) {
+  return sequelize.define('Page', {
     title: DataTypes.STRING,
     content: DataTypes.STRING,
     rendered: DataTypes.STRING,
@@ -35,7 +33,7 @@ module.exports = function(sequelize, DataTypes) {
         };
       },
       associate: function(models) {
-        Page.belongsTo(models.Site, {
+        this.belongsTo(models.Site, {
           foreignKey: {
             allowNull: false
           }
@@ -43,5 +41,4 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
-  return Page;
 };

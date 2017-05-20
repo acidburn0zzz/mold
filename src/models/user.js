@@ -1,26 +1,28 @@
-'use strict';
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
 
-module.exports = function(sequelize, DataTypes) {
-  var User = sequelize.define('User', {
+export default function(sequelize, DataTypes) {
+  return sequelize.define('User', {
     name: DataTypes.STRING,
     username: DataTypes.STRING,
     password: DataTypes.STRING,
     email: DataTypes.STRING,
-    google_id: DataTypes.STRING,
-    google_token: DataTypes.STRING
   }, {
     classMethods: {
       generateHash: function(password) {
         return bcrypt.hashSync(password, bcrypt.genSaltSync(), null);
       },
       associate: function(models) {
-        User.belongsTo(models.Site, {
+        this.belongsTo(models.Site, {
           foreignKey: {
             allowNull: false
           }
         });
-        User.hasMany(models.Post);
+        this.hasMany(models.Post);
+      },
+      defaultExcludeAttributes: function() {
+        return [
+          'id', 'username', 'password', 'createdAt', 'updatedAt', 'SiteId'
+        ];
       }
     },
     instanceMethods: {
@@ -29,8 +31,4 @@ module.exports = function(sequelize, DataTypes) {
       },
     },
   });
-  User.postDefaultExcludeAttributes = [
-    'id', 'username', 'password', 'google_id', 'google_token', 'createdAt', 'updatedAt', 'SiteId'
-  ];
-  return User;
 };
