@@ -1,47 +1,47 @@
-import React, {Component} from 'react';
-import {Redirect} from 'react-router';
-import DashSideNav from './DashSideNav';
-import DashOpView from './DashOpView';
-import DashNavbar from './DashNavbar';
-import axios from '../../axios';
+import React, {Component} from 'react'
+import {Redirect} from 'react-router'
+import DashSideNav from './DashSideNav'
+import DashOpView from './DashOpView'
+import DashNavbar from './DashNavbar'
+import axios from '../../axios'
 
 class Dash extends Component {
-  constructor() {
-    super();
+  constructor () {
+    super()
     this.state = {
-      authorized: {},
+      authorized: {}
     }
   }
 
-  componentWillMount() {
+  componentWillMount () {
     axios.post('/auth/verify', {
-      token: localStorage.getItem('token')
+      token: window.localStorage.getItem('token')
     }).then(() => {
-      this.setState({ authorized: true });
+      this.setState({ authorized: true })
     }).catch(() => {
-      this.setState({ authorized: false });
-    });
+      this.setState({ authorized: false })
+    })
   }
 
-  render() {
-    return(
-      this.state.authorized ?
-      <div>
+  render () {
+    return (
+      this.state.authorized
+      ? <div>
         <DashNavbar />
-        <div className="container-fluid">
-          <div className="row" style={{paddingTop: 65}}>
-            <div className="col-md-2">
+        <div className='container-fluid'>
+          <div className='row' style={{paddingTop: 65}}>
+            <div className='col-md-2'>
               <DashSideNav />
             </div>
-            <div className="col-md-10" style={{minHeight:"calc(100vh - 65px)"}}>
+            <div className='col-md-10' style={{minHeight: 'calc(100vh - 65px)'}}>
               <DashOpView />
             </div>
           </div>
         </div>
       </div>
-      : <Redirect to="/" />
-    );
+      : <Redirect to='/' />
+    )
   }
 }
 
-export default Dash;
+export default Dash

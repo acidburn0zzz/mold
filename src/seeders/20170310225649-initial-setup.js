@@ -1,13 +1,13 @@
-'use strict';
+'use strict'
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
     return queryInterface.bulkInsert('Sites', [{
-      name: "Mold",
+      name: 'Mold',
       initialized: false,
       createdAt: new Date(),
-      updatedAt: new Date() 
-    }], {});
+      updatedAt: new Date()
+    }], {})
     /*
       Add altering commands here.
       Return a promise to correctly handle asynchronicity.
@@ -29,4 +29,4 @@ module.exports = {
       return queryInterface.bulkDelete('Person', null, {});
     */
   }
-};
+}

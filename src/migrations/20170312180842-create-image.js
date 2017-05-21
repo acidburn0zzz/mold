@@ -1,6 +1,6 @@
-'use strict';
+'use strict'
 module.exports = {
-  up: function(queryInterface, Sequelize) {
+  up: function (queryInterface, Sequelize) {
     return queryInterface.createTable('Images', {
       id: {
         primaryKey: true,
@@ -28,9 +28,9 @@ module.exports = {
         allowNull: true,
         type: Sequelize.UUID
       }
-    });
+    })
   },
-  down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('Images');
+  down: function (queryInterface, Sequelize) {
+    return queryInterface.dropTable('Images')
   }
-};
+}

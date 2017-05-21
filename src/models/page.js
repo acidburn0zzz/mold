@@ -1,7 +1,7 @@
-import markdown from '../config/markdown';
-import slug from 'slug';
+import markdown from '../config/markdown'
+import slug from 'slug'
 
-export default function(sequelize, DataTypes) {
+export default function (sequelize, DataTypes) {
   return sequelize.define('Page', {
     title: DataTypes.STRING,
     content: DataTypes.STRING,
@@ -11,34 +11,34 @@ export default function(sequelize, DataTypes) {
     url: DataTypes.STRING
   }, {
     classMethods: {
-      new: function(body, site) {
+      new: function (body, site) {
         return {
           title: body.title,
           content: body.content,
           rendered: markdown.render(body.content),
-          draft: body.draft ? true : false,
+          draft: !!body.draft,
           path: slug(body.title, { lower: true }),
           url: '/s/' + slug(body.title, { lower: true }),
           SiteId: site.id
-        };
+        }
       },
-      update: function(body) {
+      update: function (body) {
         return {
           title: body.title,
           content: body.content,
           rendered: markdown.render(body.content),
-          draft: body.draft ? true : false,
+          draft: !!body.draft,
           path: slug(body.title, { lower: true }),
-          url: '/s/' + slug(body.title, { lower: true }),
-        };
+          url: '/s/' + slug(body.title, { lower: true })
+        }
       },
-      associate: function(models) {
+      associate: function (models) {
         this.belongsTo(models.Site, {
           foreignKey: {
             allowNull: false
           }
-        });
+        })
       }
     }
-  });
+  })
 };

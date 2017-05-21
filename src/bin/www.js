@@ -1,60 +1,58 @@
 #!/usr/bin/env node
-import {app} from '../app';
-var debug = require('debug')('node:server');
-var http = require('http');
-var fs = require('fs');
 
-let appServerPort = normalizePort(process.env.HTTP_PORT || '3001');
-let appHttpServer = http.createServer(app);
+import {app} from '../app'
+var debug = require('debug')('node:server')
+var http = require('http')
 
-appHttpServer.listen(appServerPort);
-appHttpServer.on('error', onError);
-appHttpServer.on('listening', onListening);
+let appServerPort = normalizePort(process.env.HTTP_PORT || '3001')
+let appHttpServer = http.createServer(app)
 
-function normalizePort(val) {
-  var port = parseInt(val, 10);
+appHttpServer.listen(appServerPort)
+appHttpServer.on('error', onError)
+appHttpServer.on('listening', onListening)
+
+function normalizePort (val) {
+  var port = parseInt(val, 10)
 
   if (isNaN(port)) {
     // named pipe
-    return val;
+    return val
   }
 
   if (port >= 0) {
     // port number
-    return port;
+    return port
   }
 
-  return false;
+  return false
 }
 
-function onError(error) {
+function onError (error) {
   if (error.syscall !== 'listen') {
-    throw error;
+    throw error
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof appServerPort === 'string'
+    ? 'Pipe ' + appServerPort
+    : 'Port ' + appServerPort
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
+      console.error(bind + ' requires elevated privileges')
+      process.exit(1)
     case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
+      console.error(bind + ' is already in use')
+      process.exit(1)
     default:
-      throw error;
+      throw error
   }
 }
 
-function onListening() {
-  var addr = appHttpServer.address();
+function onListening () {
+  var addr = appHttpServer.address()
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+    : 'appServerPort ' + addr.appServerPort
+  debug('Listening on ' + bind)
 }

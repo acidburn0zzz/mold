@@ -15,10 +15,17 @@
     "react-dom": "^15.4.2",
     "react-router-dom": "^4.0.0"
   },
+  "standard": {
+    "parser": "babel-eslint",
+    "ignore": [
+      "*/test/*",
+      "*/scripts/*"
+    ]
+  },
   "devDependencies": {
     "autoprefixer": "6.7.2",
     "babel-core": "6.22.1",
-    "babel-eslint": "7.1.1",
+    "babel-eslint": "^7.2.3",
     "babel-jest": "18.0.0",
     "babel-loader": "6.2.10",
     "babel-preset-react-app": "^2.2.0",

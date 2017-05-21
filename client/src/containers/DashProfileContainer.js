@@ -1,10 +1,10 @@
-import React from 'react';
-import axios from '../axios';
-import Profile from '../components/dash/Profile';
+import React from 'react'
+import axios from '../axios'
+import Profile from '../components/dash/Profile'
 
 export default class DashProfileContainer extends React.Component {
-  constructor() {
-    super();
+  constructor () {
+    super()
     this.state = {
       name: '',
       username: '',
@@ -12,7 +12,7 @@ export default class DashProfileContainer extends React.Component {
       newPassword: '',
       confirmNewPassword: '',
       email: '',
-      submitionStatus: false,
+      submitionStatus: false
     }
   }
 
@@ -27,44 +27,43 @@ export default class DashProfileContainer extends React.Component {
       password: this.state.password,
       newPassword: this.state.newPassword
     }).then((res) => {
-      this.setState({ submitionStatus: true });
-    });
+      this.setState({ submitionStatus: true })
+    })
   }
 
   renderSubmitStatus = () => {
-    return(
-      this.state.submitionStatus ?
-      <div className="alert alert-success alert-dismissible fade show" role="alert">
-        <button type="button" className="close" data-dismiss="alert" aria-label="Close" onClick={() => { this.setState({ submitionStatus: false })}}>
-          <span aria-hidden="true">&times;</span>
+    return (
+      this.state.submitionStatus
+      ? <div className='alert alert-success alert-dismissible fade show' role='alert'>
+        <button type='button' className='close' data-dismiss='alert' aria-label='Close' onClick={() => { this.setState({ submitionStatus: false }) }}>
+          <span aria-hidden='true'>&times;</span>
         </button>
         Profile successfully changed.
       </div> : null
-    );
+    )
   }
 
-  componentDidMount() {
+  componentDidMount () {
     axios.get('/user').then((res) => {
       this.setState({
         name: res.data.name,
         username: res.data.username,
-        email: res.data.email,
-      });
-    });
+        email: res.data.email
+      })
+    })
   }
 
   handleInputChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
+    this.setState({ [event.target.name]: event.target.value })
   }
 
-
-  render() {
-    return(
+  render () {
+    return (
       <div>
         {this.renderSubmitStatus()}
         <Profile
           {...this.state} handleInputChange={this.handleInputChange} submitProfileChanges={this.submitProfileChanges} />
       </div>
-    );
+    )
   }
 }

@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
@@ -8,10 +8,10 @@ module.exports = {
         model: 'Images',
         key: 'id'
       }
-    });
+    })
   },
 
   down: function (queryInterface, Sequelize) {
-    return queryInterface.removeColumn('Posts', 'ImageId');
+    return queryInterface.removeColumn('Posts', 'ImageId')
   }
-};
+}

@@ -1,28 +1,28 @@
-import React, {Component} from 'react';
-import axios from '../axios';
-import Navbar from '../components/Navbar';
+import React, {Component} from 'react'
+import axios from '../axios'
+import Navbar from '../components/Navbar'
 
 export default class NavbarContainer extends Component {
-  constructor() {
-    super();
+  constructor () {
+    super()
     this.state = {
       site: {},
-      pages: [],
+      pages: []
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     axios.get('/site').then((res) => {
       this.setState({ site: res.data })
-    });
+    })
     axios.get('/page/published').then((res) => {
-      this.setState({ pages: res.data });
-    });
+      this.setState({ pages: res.data })
+    })
   }
 
-  render() {
-    return(
+  render () {
+    return (
       <Navbar site={this.state.site} pages={this.state.pages} />
-    );
+    )
   }
 }

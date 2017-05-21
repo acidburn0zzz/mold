@@ -7,7 +7,17 @@
   "scripts": {
     "start": "nodemon --exec babel-node -- src/bin/www.js",
     "build": "babel src --out-dir  build",
-    "test": "export NODE_ENV=test; mocha --compilers js:babel-core/register src/test"
+    "test": "export NODE_ENV=test; standard && mocha --compilers js:babel-core/register src/test"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "ignore": [
+      "*.test.*",
+      "**/static/**",
+      "**/public/**",
+      "**/client/config/**",
+      "*/scripts/*"
+    ]
   },
   "dependencies": {
     "bcrypt": "^0.8.7",
@@ -56,6 +66,7 @@
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
     "gulp": "^3.9.1",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "must": "^0.13.4"
   }
 }
