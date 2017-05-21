@@ -13,7 +13,7 @@ services:
         - redis
 before_script:
          - yarn install
-         - yarn global add babel-cli gulp sequelize-cli mocha standard
+         - yarn global add babel-cli gulp sequelize-cli mocha standard babel-eslint
          - gulp db:setup
          - gulp reset --db test
          - yarn test
