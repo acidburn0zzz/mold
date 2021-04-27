@@ -51,7 +51,7 @@
     "pg-hstore": "^2.3.2",
     "pug": "^2.0.0-beta6",
     "pygmentize-bundled": "^2.3.0",
-    "redis": "^2.6.5",
+    "redis": "^3.1.1",
     "sequelize": "^3.24.3",
     "sequelize-redis-cache": "^2.0.0",
     "serve-favicon": "~2.3.0",
