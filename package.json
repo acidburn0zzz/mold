@@ -39,7 +39,7 @@
     "markdown-it": "^8.2.1",
     "markdown-it-attrs": "^0.8.0",
     "markdown-it-container": "^2.0.0",
-    "marked": "^0.3.6",
+    "marked": "^4.0.10",
     "moment": "^2.15.2",
     "morgan": "~1.7.0",
     "multer": "^1.2.0",
